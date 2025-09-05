@@ -1,1 +1,130 @@
-<!doctype html><html><body><h1>Federico Blog Starter</h1></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Federico Eckert — Research & Notes</title>
+  <meta name="description" content="Research and notes on crypto, DeFi, and fintech by Federico Eckert." />
+  <meta property="og:title" content="Federico Eckert — Research" />
+  <meta property="og:description" content="Clear analysis, practical frameworks, and research notes." />
+  <meta property="og:image" content="assets/og-image.png" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#">
+        <img src="assets/logo.svg" alt="" class="logo" />
+        <span>Federico Eckert</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#research">Research</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn-outline" href="cv/Federico_Eckert_CV.pdf" download>Download CV</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Open menu" onclick="toggleNav()">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1>Research on <span class="grad">Crypto, DeFi & Fintech</span></h1>
+          <p class="lead">
+            Clear analysis, practical frameworks, and data-driven notes — written for builders, investors, and operators.
+          </p>
+          <div class="cta">
+            <a class="btn btn-primary" href="#research">Browse Research</a>
+            <a class="btn btn-ghost" href="#about">About me</a>
+          </div>
+          <div class="meta">
+            <span class="chip">#macro</span>
+            <span class="chip">#onchain</span>
+            <span class="chip">#risk</span>
+            <span class="chip">#DeFi</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="glass">
+            <h3>Latest post</h3>
+            <p><a class="post-link" href="posts/signal-design.html">On-chain signals without overfitting</a></p>
+            <small>3 min • Quick read</small>
+          </div>
+        </div>
+      </div>
+      <div class="grid-bg" aria-hidden="true"></div>
+    </section>
+
+    <!-- RESEARCH -->
+    <section id="research" class="section">
+      <div class="container">
+        <h2>Research</h2>
+        <p class="section-lead">Short takes and deep dives. No fluff — just signal.</p>
+        <div class="cards">
+          <article class="card">
+            <h3><a href="posts/signal-design.html">On-chain signals without overfitting</a></h3>
+            <p>A practical guide to hypotheses, windows, and out-of-sample validation.</p>
+            <div class="tags"><span>on-chain</span><span>methodology</span></div>
+          </article>
+          <article class="card">
+            <h3><a href="#">ETF flows vs. price: what the lag says</a></h3>
+            <p>Correlations, causality, and useful window selection.</p>
+            <div class="tags"><span>ETF</span><span>data</span></div>
+          </article>
+          <article class="card">
+            <h3><a href="#">Crypto credit rails: limits & opportunities</a></h3>
+            <p>Infrastructure, compliance, and where real frictions live.</p>
+            <div class="tags"><span>DeFi</span><span>regulation</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section alt">
+      <div class="container about-grid">
+        <div>
+          <h2>About</h2>
+          <p>I’m <strong>Federico Eckert</strong>, an economist and financial analyst working across macro, risk, and crypto. I focus on tokenization, DeFi mechanisms, and turning ideas into products with real impact.</p>
+          <p>This blog is my research notebook: frameworks, notes, and pieces I use to think better.</p>
+          <div class="socials">
+            <a href="mailto:fede@example.com">Email</a>
+            <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://x.com/" target="_blank" rel="noreferrer">X</a>
+            <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </div>
+        <img class="avatar" src="assets/profile.jpg" alt="Federico’s photo" />
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <div class="container">
+        <h2>Contact</h2>
+        <p class="section-lead">Want to collaborate or share feedback? Reach out.</p>
+        <div class="contact-box glass">
+          <p><strong>Email:</strong> <a href="mailto:fede@example.com">fede@example.com</a></p>
+          <p><strong>Availability:</strong> DeFi BD/partnerships and research.</p>
+          <a class="btn btn-primary" href="mailto:fede@example.com">Send email</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Federico Eckert • Built with HTML/CSS • MVP v0.2</small>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
