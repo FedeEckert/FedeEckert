@@ -60,60 +60,51 @@ body{
 .post-link{color:var(--text); text-decoration:underline}
 
 /* Sections */
-.section{padding:56px 0}
+.section{padding:72px 0; position:relative}
 .section-lead{color:var(--muted); margin-top:-8px}
 .alt{background:linear-gradient(0deg, rgba(2,6,23,0.02), rgba(2,6,23,0.02)); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
 
 /* Cards */
-.cards{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:18px}
+.cards{
+  display:grid;
+  gap:20px;
+  grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+  margin-top:22px;
+}
 .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:18px; transition:transform .12s ease, border-color .2s, box-shadow .2s; box-shadow:var(--shadow)}
 .card:hover{transform:translateY(-2px); border-color:rgba(124,58,237,0.3); box-shadow:0 16px 30px rgba(124,58,237,0.14)}
 .card h3{margin-top:0}
 .tags span{font-size:12px; color:var(--muted); margin-right:10px}
 
 /* About */
-/* === ABOUT: subir la sección y alinear === */
-/* About */
-#about {
-  padding-top: 40px;      
-  padding-bottom: 40px;   
-  margin-top: -70px !important;   /* eleva la sección */
+#about{
+  margin-top:-18px;
+  padding-top:48px;
+  padding-bottom:56px;
+}
+.about-grid{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:30px;
+  align-items:start;
+}
+.about-grid h2{margin-top:0}
+.about-grid > div{max-width:620px}
+.about-grid p{text-align:justify}
+.avatar{
+  width:100%;
+  max-width:360px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  justify-self:center;
 }
 
-.about-grid {
-  display: grid;
-  grid-template-columns: 1.2fr .8fr;
-  gap: 30px;
-  align-items: start;      
+/* Mobile: texto más cómodo */
+@media(max-width:768px){
+  .about-grid p{text-align:left}
 }
 
-.about-grid h2 {
-  margin-top: 0;          
-}
-
-.about-grid > div {
-  max-width: 600px;       
-}
-
-.about-grid p {
-  text-align: justify;    /* justifica el texto en desktop */
-}
-
-.avatar {
-  width: 100%;
-  max-width: 360px;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
-  justify-self: center;   /* centra la foto en su columna */
-}
-
-/* Mobile: mejor legibilidad con texto alineado a la izquierda */
-@media (max-width: 768px) {
-  .about-grid p {
-    text-align: left;
-  }
-}
 /* Contact */
 .contact-box{padding:18px; border-radius:var(--radius); border:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow)}
 .socials a{margin-right:14px; color:var(--text); text-decoration:none; border-bottom:1px dotted var(--line)}
@@ -128,21 +119,23 @@ body{
     linear-gradient(to right, rgba(2,6,23,0.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(2,6,23,0.06) 1px, transparent 1px);
   background-size:32px 32px;
-  mask-image: radial-gradient(800px 400px at 50% -10%, #000 22%, transparent 70%);
+  mask-image:radial-gradient(800px 400px at 50% -10%, #000 22%, transparent 70%);
   pointer-events:none;
 }
 
-/* Flat, distraction-free background for reading pages */
-.post-page{
-  background: var(--bg) !important; /* quita los radiales */
-}
+/* Flat background for posts */
+.post-page{background:var(--bg)!important}
+.post-page .grid-bg{display:none}
+.post-page .site-header{background:rgba(255,255,255,0.9)}
 
-/* (opcionales, por prolijidad) */
-.post-page .grid-bg{ display:none; }         /* por si alguno aparece embebido */
-.post-page .site-header{ background: rgba(255,255,255,0.9); }
 /* Responsive */
-@media (max-width: 880px){
-  .hero-grid, .about-grid{grid-template-columns:1fr}
+@media(max-width:1100px){
+  #about{margin-top:0}
+  .about-grid{grid-template-columns:1fr}
+  .about-grid > div{max-width:720px}
+}
+@media(max-width:880px){
+  .hero-grid,.about-grid{grid-template-columns:1fr}
   .cards{grid-template-columns:1fr}
   .nav-links{display:none}
   .nav-toggle{display:block}
