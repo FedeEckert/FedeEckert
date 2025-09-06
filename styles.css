@@ -73,21 +73,31 @@ body{
 
 /* About */
 /* === ABOUT: subir la sección y alinear === */
-section#about.section {        /* más específico para ganar prioridad */
-  padding-top: 40px;
-  padding-bottom: 40px;
-  margin-top: -70px !important;   /* súbelo; ajustá a -60/-90 si querés más */
+/* About */
+#about {
+  padding-top: 40px;      
+  padding-bottom: 40px;   
+  margin-top: -70px !important;   /* eleva la sección */
 }
 
 .about-grid {
   display: grid;
   grid-template-columns: 1.2fr .8fr;
   gap: 30px;
-  align-items: start;            /* texto y foto alineados arriba */
+  align-items: start;      
 }
 
-.about-grid h2 { margin-top: 0; }/* evita que el título empuje hacia abajo */
-.about-grid > div { max-width: 600px; }
+.about-grid h2 {
+  margin-top: 0;          
+}
+
+.about-grid > div {
+  max-width: 600px;       
+}
+
+.about-grid p {
+  text-align: justify;    /* justifica el texto en desktop */
+}
 
 .avatar {
   width: 100%;
@@ -95,15 +105,15 @@ section#about.section {        /* más específico para ganar prioridad */
   border-radius: 16px;
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
+  justify-self: center;   /* centra la foto en su columna */
 }
 
-/* opcional: en pantallas medianas apilar antes para que no toque el degradado */
-@media (max-width: 1100px){
-  section#about.section { margin-top: -40px; }
-  .about-grid { grid-template-columns: 1fr; }
-  .about-grid > div { max-width: 720px; }
+/* Mobile: mejor legibilidad con texto alineado a la izquierda */
+@media (max-width: 768px) {
+  .about-grid p {
+    text-align: left;
+  }
 }
-
 /* Contact */
 .contact-box{padding:18px; border-radius:var(--radius); border:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow)}
 .socials a{margin-right:14px; color:var(--text); text-decoration:none; border-bottom:1px dotted var(--line)}
