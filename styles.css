@@ -93,6 +93,14 @@ body{
   pointer-events:none;
 }
 
+/* Flat, distraction-free background for reading pages */
+.post-page{
+  background: var(--bg) !important; /* quita los radiales */
+}
+
+/* (opcionales, por prolijidad) */
+.post-page .grid-bg{ display:none; }         /* por si alguno aparece embebido */
+.post-page .site-header{ background: rgba(255,255,255,0.9); }
 /* Responsive */
 @media (max-width: 880px){
   .hero-grid, .about-grid{grid-template-columns:1fr}
