@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Argentina: A Global Crypto Hub for Innovation — Federico Eckert</title>
+  <meta name="description" content="An analytical look at why Argentina has become a global hub for crypto: incentives born from macro instability, adoption data, and world-class projects." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    /* optional helpers if you want nicer figures without touching global CSS */
+    figure { margin: 22px 0; }
+    figure img { width: 100%; height: auto; border: 1px solid rgba(2,6,23,0.08); border-radius: 8px; }
+    figure figcaption { font-size: 0.9rem; color: rgba(2,6,23,0.7); margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../index.html"><span>Federico Eckert</span></a>
+      <nav class="nav-links">
+        <a href="../index.html#research">Research</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <article class="section">
+      <div class="container">
+        <p><a class="btn btn-outline" href="../index.html#research">← Back to research</a></p>
+
+        <h1>Argentina: A Global Crypto Hub for Innovation</h1>
+        <p class="section-lead">How a 45-million–person country at the edge of the world turned crisis into a catalyst for crypto: macro pressures, data-backed adoption, and four emblematic success stories.</p>
+        <hr style="border-color:rgba(2,6,23,0.08); margin: 18px 0;" />
+        <p><em>Published: 7 Sep 2025 · 9–10 min</em></p>
+
+        <h2>Introduction</h2>
+        <p>
+          Argentina’s crypto story is a paradox: a nation of ~45.5 million people, geographically distant and with recurrent macroeconomic stress, has produced globally relevant crypto infrastructure, security tooling, and consumer platforms. The combination of chronic inflation, currency controls, and uneven financial inclusion created unusually strong incentives to adopt and build in crypto—first as a survival tool, then as a pathway to global-scale innovation.
+        </p>
+
+        <h2>Context: Incentives Born from Macro Instability</h2>
+        <p>
+          Persistent inflation and FX frictions have made the local currency a poor store of value and complicated cross-border flows. In this environment, dollar proxies—especially stablecoins—became practical hedges and payment rails. DeFi and exchanges operate as parallel financial infrastructure for households and SMEs.
+        </p>
+
+        <!-- Plot 1: Inflation trend -->
+        <figure>
+          <img src="../assets/ar-inflation-trend.png" alt="Argentina inflation trend over recent years showing elevated annual inflation rates" />
+          <figcaption><strong>Figure 1.</strong> Argentina’s annual inflation trend. Source: INDEC / your dataset.</figcaption>
+        </figure>
+
+        <p>
+          While account ownership improved in the last decade, usage of formal savings and credit remains uneven. That gap, together with high digital/mobile penetration among younger cohorts, helps explain why crypto tools diffuse quickly beyond speculation.
+        </p>
+
+        <!-- Plot 2: Financial inclusion / account ownership -->
+        <figure>
+          <img src="../assets/financial-inclusion-ar.png" alt="Financial inclusion indicators for Argentina, showing account ownership, savings and credit usage" />
+          <figcaption><strong>Figure 2.</strong> Financial inclusion indicators (account ownership, savings, credit). Source: Global Findex / your deck.</figcaption>
+        </figure>
+
+        <p>
+          Adoption is not merely anecdotal: stablecoin usage in retail and SME contexts grew alongside the demand for censorship-resistant savings and cross-border payments.
+        </p>
+
+        <!-- Plot 3: Stablecoin usage / exchange volume -->
+        <figure>
+          <img src="../assets/stablecoin-usage-ar.png" alt="Stablecoin adoption metrics or exchange volumes for Argentina" />
+          <figcaption><strong>Figure 3.</strong> Stablecoin adoption and exchange activity. Source: your compiled sources / presentation.</figcaption>
+        </figure>
+
+        <h2>Developer Gravity: From Meetups to Global Stages</h2>
+        <p>
+          Over a decade, local meetups and hackathons compounded into global-class teams. Today, that community maturity is reflected in Buenos Aires hosting major Ethereum ecosystem gatherings and attracting international builders.
+        </p>
+
+        <!-- Plot 4: Ecosystem events timeline/map -->
+        <figure>
+          <img src="../assets/ecosystem-events-ar.png" alt="Timeline/map of major crypto events hosted in Buenos Aires and Argentina" />
+          <figcaption><strong>Figure 4.</strong> Ecosystem momentum: ETH Latam (BA, 2022), and upcoming global Ethereum gatherings in Buenos Aires. Source: event pages / your deck.</figcaption>
+        </figure>
+
+        <h2>Adoption in Numbers (Selected)</h2>
+        <ul>
+          <li>High on-chain inflows and retail activity relative to regional peers.</li>
+          <li>Growing B2B rails (payments, tokenization) integrated by local exchanges and service providers.</li>
+          <li>Macroeconomic pressures remain a core driver of dollarization and stablecoin use.</li>
+          <li>Formal inclusion has risen, but product usage gaps persist—opening space for programmable finance.</li>
+        </ul>
+
+        <h2>Success Stories (just to name a few)</h2>
+        <p>Below are four emblematic examples with Argentinian roots or leadership. This is not exhaustive—the country’s footprint spans wallets, infra, DeFi, gaming, and real-world asset tokenization.</p>
+
+        <h3>1) OpenZeppelin — Security & Standards for Web3</h3>
+        <p>
+          Founded in 2015, OpenZeppelin established a global benchmark in smart-contract security. Its open-source Contracts library underpins a large share of Ethereum’s application layer, complemented by security audits and operational tooling used by top protocols and exchanges worldwide.
+        </p>
+
+        <h3>2) Maker (now Sky) — Monetary Primitives, Globally Used</h3>
+        <p>
+          MakerDAO, among DeFi’s foundational protocols, rebranded to Sky in 2024. Argentine contributors were influential in early years—motivated by Argentina’s monetary volatility—helping build decentralized money and oracle infrastructure that’s now globally deployed.
+        </p>
+
+        <h3>3) Decentraland — A Metaverse with Argentine Origins</h3>
+        <p>
+          Created by Argentine developers, Decentraland became one of Web3’s most recognized virtual worlds, defining patterns for NFT land, on-chain governance, and creator economies during the early metaverse cycle.
+        </p>
+
+        <h3>4) Ripio — Regional Exchange and B2B Rails</h3>
+        <p>
+          Founded in Buenos Aires, Ripio scaled from retail exchange services to B2B rails across multiple countries, supporting stablecoin access, payments, and tokenization products for consumers and firms.
+        </p>
+
+        <h2>Why Argentina? A Synthesis</h2>
+        <p>
+          <em>Necessity</em> created fast product–market fit (stablecoins, censorship-resistant savings, cross-border flows). <em>Talent density</em> emerged from an open-source culture and early Ethereum community building. <em>Event gravity</em> and international connectivity now reinforce the flywheel, drawing global builders to Buenos Aires and exporting protocols used worldwide.
+        </p>
+
+        <h2>Conclusion</h2>
+        <p>
+          Argentina illustrates how adverse macro conditions, entrepreneurial culture, and open-source networks can catalyze durable crypto innovation. From security standards (OpenZeppelin) and monetary primitives (Maker/Sky) to consumer platforms (Ripio) and virtual worlds (Decentraland), Argentine builders have shipped infrastructure the world relies on—often born from practical needs rather than speculation.
+        </p>
+
+        <p style="margin-top:28px;">
+          <a class="btn btn-outline" href="../index.html#research">← Back to research</a>
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container"><small>© <span id="year"></span> Federico Eckert</small></div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
