@@ -141,14 +141,15 @@ body{
   .nav-toggle{display:block}
 }
 
+/* Figures inside posts */
 .figure { margin: 18px 0 24px; }
 .figure img {
   width: 100%;
   height: auto;
+  display: block;
   border: 1px solid var(--line);
   border-radius: 12px;
   box-shadow: var(--shadow);
-  display: block;
 }
 .figure figcaption {
   margin-top: 8px;
@@ -157,7 +158,7 @@ body{
   text-align: center;
 }
 
-/* Grid para dos gráficos lado a lado */
+/* Two-figure responsive grid */
 .figure-grid {
   display: grid;
   gap: 16px;
