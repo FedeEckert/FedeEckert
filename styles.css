@@ -197,3 +197,17 @@ body{
   color: var(--muted);
   font-style: italic;
 }
+
+.social-links{
+  display:flex; gap:14px; margin-top:16px;
+}
+.social-links a{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:36px; height:36px; border:1px solid var(--line);
+  border-radius:10px; background:var(--surface); box-shadow:var(--shadow);
+  transition:transform .15s ease, box-shadow .2s ease;
+}
+.social-links a:hover{ transform:translateY(-1px); box-shadow:0 12px 24px rgba(2,6,23,0.12); }
+.social-links svg{
+  width:20px; height:20px; fill:#0F172A; /* usa currentColor si querés heredarlo */
+}
