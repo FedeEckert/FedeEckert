@@ -140,3 +140,27 @@ body{
   .nav-links{display:none}
   .nav-toggle{display:block}
 }
+
+.figure { margin: 18px 0 24px; }
+.figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  display: block;
+}
+.figure figcaption {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Grid para dos gráficos lado a lado */
+.figure-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin: 18px 0 24px;
+}
