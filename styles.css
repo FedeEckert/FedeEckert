@@ -181,3 +181,12 @@ body{
   max-width: 680px;        /* ajustá a 640/720 si preferís */
   margin: 18px auto 24px;  /* centrado */
 }
+
+/* Controlar tamaño de Ease of Doing Business */
+.figure--business img {
+  max-width: 400px;   /* 👈 ajustá este valor: 600, 500, 450... */
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
