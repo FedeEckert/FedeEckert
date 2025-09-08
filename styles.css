@@ -184,7 +184,7 @@ body{
 
 /* Controlar tamaño de Ease of Doing Business */
 .figure--business img {
-  max-width: 200px;   /* 👈 ajustá este valor: 600, 500, 450... */
+  max-width: 600px;   /* 👈 ajustá este valor: 600, 500, 450... */
   width: 100%;
   height: auto;
   margin: 0 auto;
