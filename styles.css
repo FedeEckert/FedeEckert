@@ -165,3 +165,19 @@ body{
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   margin: 18px 0 24px;
 }
+
+/* Uniformar dos gráficos lado a lado */
+.figure-grid--uniform .figure img{
+  height: 260px;           /* misma altura visual */
+  width: 100%;
+  object-fit: contain;     /* no recorta, encaja dentro del alto */
+  background: #fff;
+  padding: 6px;            /* marco interno sutil */
+  border-radius: 10px;
+}
+
+/* Limitar ancho de figuras grandes y centrarlas */
+.figure--max680{ 
+  max-width: 680px;        /* ajustá a 640/720 si preferís */
+  margin: 18px auto 24px;  /* centrado */
+}
