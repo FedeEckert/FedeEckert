@@ -211,3 +211,32 @@ body{
 .social-links svg{
   width:20px; height:20px; fill:#0F172A; /* usa currentColor si querés heredarlo */
 }
+
+
+/* Contact v3 */
+.contact .section-lead{ margin-bottom:6px; }
+.contact-availability{ color:var(--muted); margin:0 0 10px; }
+
+.contact-actions{
+  display:flex; gap:12px; flex-wrap:wrap;
+  justify-content:center; /* centrado prolijo */
+  margin-top:12px;
+}
+
+.contact-btn{ display:inline-flex; align-items:center; gap:8px; }
+.contact-btn .icon{ width:18px; height:18px; display:inline-flex; }
+.contact-btn .icon svg{ width:100%; height:100%; fill:#06121A; }
+
+/* Botón Telegram en tu paleta */
+.btn-telegram{
+  border:1px solid var(--line);
+  background:linear-gradient(135deg,#229ED9,#5FD0FF);
+  color:#06121A;
+  box-shadow:0 6px 18px rgba(34,158,217,.25);
+}
+.btn-telegram:active{ transform:translateY(1px); }
+
+/* Mobile: botones a ancho completo */
+@media (max-width:560px){
+  .contact-actions .btn{ width:100%; justify-content:center; }
+}
