@@ -186,7 +186,7 @@ body{
 /* Ajustar SOLO el gráfico de Ease of Doing Business */
 .figure--business img {
   width: auto !important;      /* 👈 evita que se estire al 100% */
-  max-width: 450px !important; /* 👈 ahora sí controla el ancho */
+  max-width: 200px !important; /* 👈 ahora sí controla el ancho */
   display: block;
   margin: 0 auto;              /* centra la imagen */
 }
