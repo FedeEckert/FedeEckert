@@ -1,0 +1,213 @@
+# Install required libraries (for Google Colab)
+!pip install pandas numpy yfinance requests openpyxl
+
+import pandas as pd
+import numpy as np
+import yfinance as yf
+import requests
+from datetime import datetime
+
+# ✅ Define Start & End Dates
+start_date = "2023-01-01"
+end_date = "2025-03-15"
+
+# ✅ Function to fetch Blockchain Data for a fixed date range
+def get_blockchain_data_combined(url_base, label):
+    try:
+        # Historical: Jan 1, 2023 to Mar 21, 2023
+        start_unix = 1672531200
+        end_unix = 1679356800
+        url_early = f"{url_base}?start={start_unix}&end={end_unix}&format=json&sampled=false"
+        response_early = requests.get(url_early)
+        data_early = response_early.json()
+
+        df_early = pd.DataFrame(data_early["values"]).set_index("x")["y"]
+        df_early.index = pd.to_datetime(df_early.index, unit="s")
+        df_early.name = "value"
+
+        # Recent 2 years (from ~Mar 22, 2023 to now)
+        url_recent = f"{url_base}?timespan=2years&format=json&sampled=false"
+        response_recent = requests.get(url_recent)
+        data_recent = response_recent.json()
+
+        df_recent = pd.DataFrame(data_recent["values"]).set_index("x")["y"]
+        df_recent.index = pd.to_datetime(df_recent.index, unit="s")
+        df_recent.name = "value"
+
+        # Combine and drop duplicates
+        df_combined = pd.concat([df_early, df_recent]).sort_index()
+        df_combined = df_combined[~df_combined.index.duplicated(keep='last')]
+
+        df_combined = df_combined[df_combined.index <= pd.Timestamp("2025-03-15")]
+
+        print(f"✅ {label} fetched: {df_combined.index.min().date()} to {df_combined.index.max().date()}")
+        return df_combined
+
+    except Exception as e:
+        print(f"❌ Error fetching {label}: {e}")
+        return None
+
+# ✅ Blockchain Metrics
+
+btc_hash_rate = get_blockchain_data_combined("https://api.blockchain.info/charts/hash-rate", "BTC Hash Rate")
+btc_mining_difficulty = get_blockchain_data_combined("https://api.blockchain.info/charts/difficulty", "BTC Mining Difficulty")
+btc_avg_payment_per_block = get_blockchain_data_combined("https://api.blockchain.info/charts/transaction-fees", "BTC Avg Payment Per Block")
+btc_avg_block_size = get_blockchain_data_combined("https://api.blockchain.info/charts/avg-block-size", "BTC Avg Block Size")
+btc_avg_confirmation_time = get_blockchain_data_combined("https://api.blockchain.info/charts/avg-confirmation-time", "BTC Avg Confirmation Time")# Get Fear and Greed Index
+
+
+
+# Get Fear and Greed Index
+def get_fear_greed_index_filtered():
+    url = "https://api.alternative.me/fng/?limit=0&format=json&date_format=us"
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if "data" in data:
+            df = pd.DataFrame(data["data"])
+            df["timestamp"] = pd.to_datetime(df["timestamp"], format="%m-%d-%Y")
+            df.set_index("timestamp", inplace=True)
+            df["value"] = df["value"].astype(float)
+            
+            # ✅ Sort index before slicing
+            df.sort_index(inplace=True)
+            return df["value"].loc["2023-01-01":"2025-03-15"]
+        else:
+            print("⚠️ Warning: No Fear & Greed Index data found")
+            return None
+    except Exception as e:
+        print(f"❌ Error fetching Fear & Greed Index: {e}")
+        return None
+
+fear_greed_index = get_fear_greed_index_filtered()
+
+
+# ✅ Yahoo Finance fetch
+def get_yahoo_data(tickers, start_date, end_date):
+    result = {}
+    for ticker in tickers:
+        try:
+            data = yf.download(ticker, start=start_date, end=end_date, progress=False, auto_adjust=False)
+            if data.empty:
+                print(f"⚠️ Warning: No data for {ticker}")
+            else:
+                result[ticker] = data[['Close', 'Volume', 'Open', 'High', 'Low']]
+        except Exception as e:
+            print(f"❌ Error fetching {ticker}: {e}")
+    return result
+
+# ✅ Define Yahoo Tickers
+yahoo_tickers = {
+    'SP500': 'SPY',
+    'NASDAQ100': 'QQQ',
+    'DOWJONES': 'DIA',
+    'RUSSELL2000': 'IWM',
+    'GOLD': 'GLD',
+    'SILVER': 'SLV',
+    'OIL': 'USO',
+    'DOLLARINDEX': 'UUP',
+    'TREASURY10': '^TNX',
+    'VIX': '^VIX',
+    'BTC': 'BTC-USD',
+    'ETH': 'ETH-USD'
+}
+
+yahoo_data = get_yahoo_data(yahoo_tickers.values(), start_date, end_date)
+
+# ✅ Store data in dictionary
+data_dict = {}
+
+for key, ticker in yahoo_tickers.items():
+    if ticker in yahoo_data and not yahoo_data[ticker].empty:
+        print(f"✅ Storing {key}...")
+        data_dict[key] = yahoo_data[ticker]['Close'].squeeze()
+
+        if key in ['BTC', 'ETH']:
+            data_dict[f"{key}_Volume"] = yahoo_data[ticker]['Volume'].squeeze()
+            data_dict[f"{key}_Volatility"] = ((yahoo_data[ticker]['High'] - yahoo_data[ticker]['Low']) / yahoo_data[ticker]['Open']).squeeze()
+    else:
+        print(f"⚠️ Warning: Missing data for {key}")
+
+# ✅ Add Blockchain Data
+data_dict.update({
+    'BTC_HashRate': btc_hash_rate.squeeze() if btc_hash_rate is not None else None,
+    'BTC_MiningDifficulty': btc_mining_difficulty.squeeze() if btc_mining_difficulty is not None else None,
+    'BTC_AvgPaymentPerBlock': btc_avg_payment_per_block.squeeze() if btc_avg_payment_per_block is not None else None,
+    'BTC_AvgBlockSize': btc_avg_block_size.squeeze() if btc_avg_block_size is not None else None,
+    'BTC_AvgConfirmationTime': btc_avg_confirmation_time.squeeze() if btc_avg_confirmation_time is not None else None,
+    'FearGreedIndex': fear_greed_index.squeeze() if fear_greed_index is not None else None
+})
+
+# ✅ Align by union of all indexes
+all_indices = pd.Index([])
+for series in data_dict.values():
+    if isinstance(series, pd.Series):
+        all_indices = all_indices.union(series.index)
+
+df = pd.DataFrame(index=all_indices)
+
+for k, v in data_dict.items():
+    if isinstance(v, pd.Series):
+        df[k] = v
+# ✅ Convert index to datetime
+df.index = pd.to_datetime(df.index)
+
+# ✅ Remove weekends
+df = df[df.index.dayofweek < 5]
+
+# ✅ Remove confirmed US market holidays with missing Yahoo data
+confirmed_us_holidays = [
+    "2023-01-02", "2023-01-16", "2023-02-20", "2023-04-07", "2023-05-29",
+    "2023-06-19", "2023-07-04", "2023-09-04", "2023-11-23", "2023-12-25",
+    "2024-01-01", "2024-01-15", "2024-02-19", "2024-03-29", "2024-05-27",
+    "2024-06-19", "2024-07-04", "2024-09-02", "2024-11-28", "2024-12-25",
+    "2025-01-01", "2025-01-09", "2025-01-20", "2025-02-17"
+]
+confirmed_us_holidays = pd.to_datetime(confirmed_us_holidays)
+df = df.drop(index=confirmed_us_holidays, errors='ignore')
+
+# ✅ Apply log1p to skewed blockchain variables to reduce distortion
+log_transform_columns = [
+    'BTC_Volume',
+    'ETH_Volume',
+    'BTC_MiningDifficulty',
+    'BTC_HashRate',
+    'BTC_AvgPaymentPerBlock',
+    'BTC_AvgBlockSize',
+    'BTC_AvgConfirmationTime'
+]
+
+for col in log_transform_columns:
+    if col in df.columns:
+        df[col] = np.log1p(df[col])
+
+# ✅ Convert price-related columns to daily returns
+price_columns = {
+    "SPY": "SP500",
+    "QQQ": "NASDAQ100",
+    "DIA": "DOWJONES",
+    "IWM": "RUSSELL2000",
+    "GLD": "GOLD",
+    "SLV": "SILVER",
+    "USO": "OIL",
+    "UUP": "DOLLARINDEX",
+    "BTC-USD": "BTC",
+    "ETH-USD": "ETH"
+}
+
+# Apply .pct_change() to those columns
+for col in price_columns.values():
+    if col in df.columns:
+        df[col] = df[col].pct_change()
+
+# ✅ Drop the first row with NaNs created by pct_change()
+df = df.iloc[1:]
+
+# ✅ Save and download
+df.to_csv("financial_crypto_dataset.csv")
+from google.colab import files
+files.download("financial_crypto_dataset.csv")
+
+print(f"\n✅ Final dataset with {df.shape[0]} rows and {df.shape[1]} columns.")
+df.head()
+
