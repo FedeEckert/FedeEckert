@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Measuring Crypto’s Nerves: Building a Financial Conditions Index (FCI) for Bitcoin — Federico Eckert</title>
+  <meta name="description" content="A Python-driven case study: assembling macro + on-chain data, using PCA to build a Financial Conditions Index for crypto, and testing predictive power with supervised learning." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    /* modest, centered figures */
+    figure { max-width: 720px; margin: 22px auto; text-align: center; }
+    figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(2,6,23,0.08); }
+    figure figcaption { font-size: 0.92rem; color: rgba(2,6,23,0.72); margin-top: 8px; }
+    code, pre { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../index.html"><span>Federico Eckert</span></a>
+      <nav class="nav-links">
+        <a href="../index.html#research">Research</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <article class="section">
+      <div class="container">
+        <p><a class="btn btn-outline" href="../index.html#research">← Back to research</a></p>
+
+        <h1>Measuring Crypto’s Nerves: Building a Financial Conditions Index (FCI) for Bitcoin</h1>
+        <p class="section-lead">
+          A data science case study from my MSc: I pulled macro + crypto-native signals, used PCA to build a Financial Conditions Index (FCI),
+          and tested whether it predicts Bitcoin volatility with supervised learning in Python.
+        </p>
+        <hr style="border-color:rgba(2,6,23,0.08); margin:18px 0;" />
+        <p><em>Published: 9 Sep 2025 · 10–12 min</em></p>
+
+        <h2>Why this project</h2>
+        <p>
+          Crypto reacts to two worlds at once: traditional macro/market conditions and blockchain-native dynamics. I wanted a single, interpretable
+          metric that summarizes both—something like a <em>Financial Conditions Index (FCI)</em> for crypto—and then test whether this FCI
+          helps anticipate shifts in Bitcoin volatility (a key risk proxy).
+        </p>
+
+        <h2>Data & sources (22 variables)</h2>
+        <p>
+          I combined three layers of data into a daily panel (Jan&nbsp;2023–Mar&nbsp;2025):
+        </p>
+        <ul>
+          <li><strong>Macro & markets:</strong> SPY, QQQ, DIA, IWM, GLD, SLV, USO, UUP (DXY proxy), ^TNX (10Y), ^VIX (risk).</li>
+          <li><strong>Crypto prices/activity:</strong> BTC &amp; ETH prices, volumes, and intraday volatility (High–Low / Open).</li>
+          <li><strong>On-chain fundamentals (Blockchain.com):</strong> hash rate, mining difficulty, avg block size, avg confirmation time, fees per block.</li>
+          <li><strong>Sentiment:</strong> Crypto Fear &amp; Greed Index.</li>
+        </ul>
+        <p>
+          Pre-processing: percentage returns for price series; <code>log1p</code> for skewed metrics (volumes, hash/difficulty/fees); removed weekends and
+          US market holidays to align calendars; then standardized everything prior to PCA.
+        </p>
+
+        <figure>
+          <img src="../posts/Data/Correlation-matrix.jpeg" alt="Correlation heatmap among macro, crypto, and on-chain variables" />
+          <figcaption><strong>Figure 1.</strong> Correlation map. Strong clusters (equities together, crypto vols together) support dimensionality reduction.</figcaption>
+        </figure>
+
+        <h2>PCA → a crypto Financial Conditions Index</h2>
+        <p>
+          I ran Principal Component Analysis (PCA) to compress 22 inputs into a few latent factors. The first six PCs explained ~70% of total variance,
+          with PC1 dominated by crypto-native signals (BTC/ETH volumes & volatility, hash rate, difficulty). I standardized PC1 to construct the FCI.
+        </p>
+
+        <figure>
+          <img src="../posts/Data/PCA.jpeg" alt="Scree plot / explained variance that motivates retaining the first six components" />
+          <figcaption><strong>Figure 2.</strong> Scree / explained-variance plot. I retained PCs 1–6 to reach ~70% variance with reasonable parsimony.</figcaption>
+        </figure>
+
+        <h2>Does the FCI line up with stress?</h2>
+        <p>
+          Visual inspection (not shown here) indicates the FCI rises during known stress windows and co-moves with BTC volatility. Intuition checks out:
+          when liquidity thins and crypto-native risk builds, PC1 tightens—and volatility follows.
+        </p>
+
+        <h2>Turning it into a prediction problem</h2>
+        <p>
+          I reframed the task as a binary classification: “Is BTC daily volatility above its median?” Using PCs 1–6 as features, I fitted Logistic Regression (LR),
+          Linear Discriminant Analysis (LDA), and Quadratic Discriminant Analysis (QDA). Train/test splits respected time order (no shuffling).
+        </p>
+
+        <figure>
+          <img src="../posts/Data/ROC.jpeg" alt="ROC curves for LR, LDA, QDA predicting high BTC volatility" />
+          <figcaption><strong>Figure 3.</strong> ROC curves: all models achieved high AUCs (≈0.90). See caveats below on why this might be “too perfect”.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="../posts/Data/Confusion-matrix.jpeg" alt="Confusion matrices comparing model trade-offs (recall vs false positives)" />
+          <figcaption><strong>Figure 4.</strong> Confusion matrices: LR was aggressive (high recall, more false positives), LDA balanced, QDA conservative (fewer false alarms, more misses).</figcaption>
+        </figure>
+
+        <h2>What the results suggest</h2>
+        <ul>
+          <li><strong>Signal exists:</strong> A small set of latent factors (PCs) captures information relevant to BTC volatility regimes.</li>
+          <li><strong>Model choice = risk preference:</strong> LR suits “don’t miss stress” mandates; QDA suits “avoid false alarms”; LDA splits the difference.</li>
+          <li><strong>Use case:</strong> An FCI can act as an early-warning overlay for traders/PMs to adjust exposure and leverage when conditions tighten.</li>
+        </ul>
+
+        <h2>Critical caveats (read this)</h2>
+        <p>
+          The ROC curves look almost <em>too</em> clean. That sets off my alarm bells. The two most plausible reasons:
+        </p>
+        <ol>
+          <li><strong>Limited horizon (≈ 2 years):</strong> Jan&nbsp;2023–Mar&nbsp;2025 is one regime (post-FTX recovery, ETF-driven cycle). What works in this
+              window may not generalize to earlier cycles. Extending the sample (e.g., 2019–2025) would likely reduce AUCs.</li>
+          <li><strong>Subtle leakage / regime cues:</strong> Even with time-ordered splits, leakage can sneak in—for example if PCA is fitted on the full
+              sample instead of training only. Non-stationary features (e.g., hash rate, difficulty) can also proxy “time” and inflate separability.</li>
+        </ol>
+        <p>
+          How I’d harden this:
+        </p>
+        <ul>
+          <li>Fit PCA on the <em>training</em> set only; transform the test set afterwards.</li>
+          <li>Use walk-forward (rolling) validation across multiple sub-periods.</li>
+          <li>Difference or de-trend strongly non-stationary inputs; re-test with alternative target definitions.</li>
+        </ul>
+        <p>
+          Bottom line: the method is solid, but the **AUC ≈ 0.90** should be treated as an upper bound in this short horizon—not a guarantee out of sample.
+        </p>
+
+        <h2>Implementation notes (Python)</h2>
+        <p>
+          I wrote the data assembly in <code>Database_code.txt</code> (Yahoo Finance, Blockchain.com, Fear &amp; Greed), and modeling in
+          <code>PCA_Supervised_Learning-Code.py</code>. Key steps:
+        </p>
+        <ul>
+          <li>Log transforms for skewed series; returns for price series; standardization before PCA.</li>
+          <li>Retain PCs 1–6; standardize PC1 as the FCI.</li>
+          <li>Binary target: BTC volatility &gt; median; fit LR/LDA/QDA; report ROC-AUC + confusion matrices.</li>
+        </ul>
+
+        <h2>Context: why an FCI for crypto?</h2>
+        <p>
+          Crypto straddles macro and on-chain. A compact index that distills both can help practitioners “feel the tape” quantitatively—especially in
+          regime shifts when correlations flip and liquidity fragments. The goal isn’t to replace judgment, but to give it a cleaner signal.
+        </p>
+
+        <!-- Optional context figures if you want to use them later
+        <figure>
+          <img src="../posts/Data/Inflation.jpeg" alt="Macro context example" />
+          <figcaption><strong>Appendix Figure.</strong> Macro context (optional for this post).</figcaption>
+        </figure>
+        -->
+
+        <h2>Takeaways</h2>
+        <ul>
+          <li>A crypto FCI built via PCA is feasible and informative.</li>
+          <li>Supervised models can turn that FCI into actionable risk signals.</li>
+          <li>Generalization demands more history and stricter validation (walk-forward, train-only PCA, stationarity checks).</li>
+        </ul>
+
+        <p style="margin-top:28px;">
+          <a class="btn btn-outline" href="../index.html#research">← Back to research</a>
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container"><small>© <span id="year"></span> Federico Eckert</small></div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
