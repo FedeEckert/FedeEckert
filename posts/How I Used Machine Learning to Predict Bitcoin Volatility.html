@@ -82,7 +82,7 @@
         <p>
           To simplify the complexity, I used Principal Component Analysis (PCA). This method compresses the information into a handful of latent factors.
           The first six components explained around 70% of total variance, with the first component (PC1) dominated by crypto-native signals like BTC/ETH volumes,
-          volatility, and hash rate. I standardized PC1 into what I call the <strong>Financial Conditions Index (FCI)</strong>.
+          volatility, and hash rate. I chose the first 6 Principal components to represent the so called <strong>Financial Conditions Index (FCI)</strong> in order to predict the volatility of Bitcoin.
         </p>
 
         <figure>
@@ -90,46 +90,35 @@
           <figcaption><strong>Figure 2.</strong> Scree plot: the first six components were retained, balancing explanatory power and parsimony.</figcaption>
         </figure>
 
-        <h2>How the FCI behaves</h2>
-        <p>
-          The FCI rises during stress and co-moves with Bitcoin volatility. In other words, when the crypto market tightens, the index captures it.
-          This pattern validates the intuition that crypto financial conditions can be tracked through a single measure.
-        </p>
-
-        <figure>
-          <img src="../posts/Data/Vol-FCI.jpeg" alt="Time series of FCI plotted against BTC volatility">
-          <figcaption><strong>Figure 3.</strong> FCI vs BTC Volatility: the index climbs during volatility spikes.</figcaption>
-        </figure>
-
         <h2>Predicting volatility with machine learning</h2>
         <p>
-          Next, I turned the problem into prediction. I defined high volatility as days where Bitcoin’s volatility exceeded its median,
-          and trained three models—Logistic Regression, Linear Discriminant Analysis (LDA), and Quadratic Discriminant Analysis (QDA), 
-          using the first six PCs as features (together they have 70% of explainatory power). To avoid leakage, the data split respected time order.
+          Next, I utilized supervised learning technique in order to predict movements in BTC volatility. I defined high volatility as days where Bitcoin’s volatility exceeded its median,
+          and trained three models: <stong>Logistic Regression</stong>, <strong>Linear Discriminant Analysis (LDA)</strong>, and <strong>Quadratic Discriminant Analysis (QDA)</strong>, 
+          using the first six PCs as features (together they have 70% of explainatory power). To avoid leakage, the data split respected time order. you may see the result of this study on the ROC curvesY
         </p>
 
         <figure>
           <img src="../posts/Data/ROC.jpeg" alt="ROC curves for LR, LDA, QDA models">
-          <figcaption><strong>Figure 4.</strong> ROC curves: all models delivered high AUCs (~0.90). This looks promising—but also suspiciously clean.</figcaption>
+          <figcaption><strong>Figure 4.</strong> ROC curves: all models delivered high AUCs (~0.90).</figcaption>
         </figure>
-
-        <h2>Results and caveats</h2>
-        <p>
-          Each model told a slightly different story. Logistic Regression caught nearly all high-volatility cases but produced more false alarms.
-          QDA was conservative, minimizing false positives but missing some events. LDA balanced the two. The ROC-AUC scores were around 0.90,
-          suggesting strong predictive power.
-        </p>
-        <p>
-          But there is a catch. These near-perfect curves are likely an artifact of the dataset. With only two years of data, the models may be
-          picking up on one particular market regime rather than true universal drivers. Non-stationary variables like hash rate and difficulty,
-          which trend over time, can also inflate separability by acting as hidden time proxies. To harden the analysis, PCA should be fit only
-          on the training set, walk-forward validation should be used, and longer histories incorporated if available.
-        </p>
 
         <figure>
           <img src="../posts/Data/Confusion-matrix.jpeg" alt="Confusion matrices of the models">
           <figcaption><strong>Figure 5.</strong> Confusion matrices: different trade-offs between missing signals and false alarms.</figcaption>
         </figure>
+        <p>
+          Each model told a slightly different story. Logistic Regression caught nearly all high-volatility cases but produced more false alarms.
+          QDA was more conservative, minimizing false positives but missing some events. LDA balanced the two. The ROC-AUC scores were around 0.90,
+          suggesting strong predictive power.
+        </p>
+        <p>
+          But there is a catch, these near-perfect curves are likely an artifact of the dataset. With only two years of data, the models may be
+          picking up on one particular market regime rather than true universal drivers. Non-stationary variables like hash rate and difficulty,
+          which trend over time, can also inflate separability by acting as hidden time proxies. To harden the analysis, PCA should be fit only
+          on the training set, walk-forward validation should be used, and longer histories incorporated if available.
+        </p>
+
+        
 
         <h2>Takeaways</h2>
         <p>Despite limitations, the experiment shows that:</p>
