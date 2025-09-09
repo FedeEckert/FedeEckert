@@ -4,14 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>How I Used Machine Learning to Predict Bitcoin Volatility — Federico Eckert</title>
-  <meta name="description" content="A Python-driven case study: assembling macro + on-chain data, using PCA to build a Financial Conditions Index for crypto, and testing predictive power with supervised learning." />
+  <meta name="description" content="A case study on building a Financial Conditions Index (FCI) for crypto using PCA and testing its predictive power on Bitcoin volatility with supervised learning." />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css" />
   <style>
     figure { max-width: 720px; margin: 22px auto; text-align: center; }
     figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(2,6,23,0.08); }
     figure figcaption { font-size: 0.92rem; color: rgba(2,6,23,0.72); margin-top: 8px; }
-    code, pre { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
   </style>
 </head>
 <body>
@@ -33,123 +32,108 @@
 
         <h1>How I Used Machine Learning to Predict Bitcoin Volatility</h1>
         <p class="section-lead">
-          A data science case study: I pulled macro + crypto-native signals, used PCA to build a Financial Conditions Index (FCI),
-          and tested whether it predicts Bitcoin volatility with supervised learning in Python.
+          Crypto markets are famously volatile. In this project, I set out to answer a simple question:
+          can we build a single index that captures the financial conditions around Bitcoin and use it to anticipate volatility?
         </p>
         <hr style="border-color:rgba(2,6,23,0.08); margin:18px 0;" />
         <p><em>Published: 9 Sep 2025 · 10–12 min</em></p>
 
-        <h2>Why this project</h2>
+        <h2>Dataset construction</h2>
         <p>
-          Crypto reacts to two worlds at once: traditional macro/market conditions and blockchain-native dynamics. I wanted a single, interpretable
-          metric that summarizes both—something like a <em>Financial Conditions Index (FCI)</em> for crypto—and then test whether this FCI
-          helps anticipate shifts in Bitcoin volatility (a key risk proxy).
+          The starting point for any attempt to measure financial conditions is the data. For crypto, that means blending two worlds:
+          the traditional financial system and the blockchain-native one. To do this, I assembled a dataset with <strong>22 variables</strong>
+          covering global markets, sentiment, and Bitcoin’s on-chain activity.
         </p>
-
-        <h2>Data & sources (22 variables)</h2>
         <p>
-          I combined three layers of data into a daily panel (Jan&nbsp;2023–Mar&nbsp;2025):
+          On the traditional side, I pulled equity market proxies (S&amp;P 500, NASDAQ, Dow Jones, Russell 2000), commodities (gold, silver, oil),
+          the US dollar index, Treasury yields, and the VIX. Together, these track monetary policy, inflation hedging, and investor risk appetite.
         </p>
-        <ul>
-          <li><strong>Macro & markets:</strong> SPY, QQQ, DIA, IWM, GLD, SLV, USO, UUP (DXY proxy), ^TNX (10Y), ^VIX (risk).</li>
-          <li><strong>Crypto prices/activity:</strong> BTC &amp; ETH prices, volumes, and intraday volatility (High–Low / Open).</li>
-          <li><strong>On-chain fundamentals (Blockchain.com):</strong> hash rate, mining difficulty, avg block size, avg confirmation time, fees per block.</li>
-          <li><strong>Sentiment:</strong> Crypto Fear &amp; Greed Index.</li>
-        </ul>
         <p>
-          Pre-processing: percentage returns for price series; <code>log1p</code> for skewed metrics (volumes, hash/difficulty/fees); removed weekends and
-          US market holidays to align calendars; then standardized everything prior to PCA.
+          On the crypto side, I included Bitcoin and Ethereum prices, trading volumes, and intraday volatility. To capture fundamentals,
+          I drew from Blockchain.com’s API: hash rate, mining difficulty, block size, transaction fees, and confirmation times. Finally,
+          I added the widely followed Fear &amp; Greed Index as a proxy for investor sentiment.
+        </p>
+        <p>
+          There were important <strong>limitations</strong>. Free APIs only allowed me to collect about two years of continuous data
+          (Jan&nbsp;2023 to Mar&nbsp;2025). That short horizon means the models risk overfitting to one specific cycle rather than generalizing across regimes.
+          It is one of the most important caveats when interpreting the results.
+        </p>
+        <p>
+          Before analysis, I applied several adjustments: all price series were converted into daily returns, skewed variables were log-transformed,
+          weekends were dropped, and US market holidays were removed to match trading calendars. Finally, the data was standardized to make it comparable across variables.
         </p>
 
         <figure>
           <img src="../posts/Data/Correlation-matrix.jpeg" alt="Correlation heatmap among macro, crypto, and on-chain variables" />
-          <figcaption><strong>Figure 1.</strong> Correlation map. Strong clusters (equities together, crypto vols together) support dimensionality reduction.</figcaption>
+          <figcaption><strong>Figure 1.</strong> Correlation map: equities cluster together, crypto vols correlate with each other, justifying dimensionality reduction.</figcaption>
         </figure>
 
-        <h2>PCA → a crypto Financial Conditions Index</h2>
+        <h2>From 22 variables to one index</h2>
         <p>
-          I ran Principal Component Analysis (PCA) to compress 22 inputs into a few latent factors. The first six PCs explained ~70% of total variance,
-          with PC1 dominated by crypto-native signals (BTC/ETH volumes & volatility, hash rate, difficulty). I standardized PC1 to construct the FCI.
+          To simplify the complexity, I used Principal Component Analysis (PCA). This method compresses the information into a handful of latent factors.
+          The first six components explained around 70% of total variance, with the first component (PC1) dominated by crypto-native signals like BTC/ETH volumes,
+          volatility, and hash rate. I standardized PC1 into what I call the <strong>Financial Conditions Index (FCI)</strong>.
         </p>
 
         <figure>
-          <img src="../posts/Data/PCA.jpeg" alt="Scree plot / explained variance that motivates retaining the first six components" />
-          <figcaption><strong>Figure 2.</strong> Scree / explained-variance plot. I retained PCs 1–6 to reach ~70% variance with reasonable parsimony.</figcaption>
+          <img src="../posts/Data/PCA.jpeg" alt="Scree plot showing explained variance across components" />
+          <figcaption><strong>Figure 2.</strong> Scree plot: the first six components were retained, balancing explanatory power and parsimony.</figcaption>
         </figure>
 
-        <h2>Does the FCI line up with stress?</h2>
+        <h2>How the FCI behaves</h2>
         <p>
-          The Financial Conditions Index rises during known stress windows and co-moves with BTC volatility—consistent with the intuition that when
-          liquidity thins and crypto-native risk builds, PC1 tightens and volatility follows.
+          The FCI rises during stress and co-moves with Bitcoin volatility. In other words, when the crypto market tightens, the index captures it.
+          This pattern validates the intuition that crypto financial conditions can be tracked through a single measure.
         </p>
 
         <figure>
-          <img src="../posts/Data/Vol-FCI.jpeg" alt="Time series overlay of FCI and Bitcoin daily volatility" />
-          <figcaption><strong>Figure 3.</strong> FCI vs. BTC Volatility: clear co-movement during stress episodes.</figcaption>
+          <img src="../posts/Data/Vol-FCI.jpeg" alt="Time series of FCI plotted against BTC volatility" />
+          <figcaption><strong>Figure 3.</strong> FCI vs BTC Volatility: the index climbs during volatility spikes.</figcaption>
         </figure>
 
-        <h2>Turning it into a prediction problem</h2>
+        <h2>Predicting volatility with machine learning</h2>
         <p>
-          I reframed the task as a binary classification: “Is BTC daily volatility above its median?” Using PCs 1–6 as features, I fitted Logistic Regression (LR),
-          Linear Discriminant Analysis (LDA), and Quadratic Discriminant Analysis (QDA). Train/test splits respected time order (no shuffling).
+          Next, I turned the problem into prediction. I defined high volatility as days where Bitcoin’s volatility exceeded its median,
+          and trained three models—Logistic Regression, Linear Discriminant Analysis (LDA), and Quadratic Discriminant Analysis (QDA)—
+          using the first six PCs as features. To avoid leakage, the data split respected time order.
         </p>
 
         <figure>
-          <img src="../posts/Data/ROC.jpeg" alt="ROC curves for LR, LDA, QDA predicting high BTC volatility" />
-          <figcaption><strong>Figure 4.</strong> ROC curves: all models achieved high AUCs (≈0.90). See caveats below on why this might be “too perfect”.</figcaption>
+          <img src="../posts/Data/ROC.jpeg" alt="ROC curves for LR, LDA, QDA models" />
+          <figcaption><strong>Figure 4.</strong> ROC curves: all models delivered high AUCs (~0.90). This looks promising—but also suspiciously clean.</figcaption>
         </figure>
+
+        <h2>Results and caveats</h2>
+        <p>
+          Each model told a slightly different story. Logistic Regression caught nearly all high-volatility cases but produced more false alarms.
+          QDA was conservative, minimizing false positives but missing some events. LDA balanced the two. The ROC-AUC scores were around 0.90,
+          suggesting strong predictive power.
+        </p>
+        <p>
+          But there is a catch. These near-perfect curves are likely an artifact of the dataset. With only two years of data, the models may be
+          picking up on one particular market regime rather than true universal drivers. Non-stationary variables like hash rate and difficulty,
+          which trend over time, can also inflate separability by acting as hidden time proxies. To harden the analysis, PCA should be fit only
+          on the training set, walk-forward validation should be used, and longer histories incorporated if available.
+        </p>
 
         <figure>
-          <img src="../posts/Data/Confusion-matrix.jpeg" alt="Confusion matrices comparing model trade-offs (recall vs false positives)" />
-          <figcaption><strong>Figure 5.</strong> Confusion matrices: LR was aggressive (high recall, more false positives), LDA balanced, QDA conservative (fewer false alarms, more misses).</figcaption>
+          <img src="../posts/Data/Confusion-matrix.jpeg" alt="Confusion matrices of the models" />
+          <figcaption><strong>Figure 5.</strong> Confusion matrices: different trade-offs between missing signals and false alarms.</figcaption>
         </figure>
-
-        <h2>What the results suggest</h2>
-        <ul>
-          <li><strong>Signal exists:</strong> A small set of latent factors (PCs) captures information relevant to BTC volatility regimes.</li>
-          <li><strong>Model choice = risk preference:</strong> LR suits “don’t miss stress” mandates; QDA suits “avoid false alarms”; LDA splits the difference.</li>
-          <li><strong>Use case:</strong> An FCI can act as an early-warning overlay for traders/PMs to adjust exposure and leverage when conditions tighten.</li>
-        </ul>
-
-        <h2>Critical caveats (read this)</h2>
-        <p>
-          The ROC curves look almost <em>too</em> clean. That sets off my alarm bells. The two most plausible reasons:
-        </p>
-        <ol>
-          <li><strong>Limited horizon (≈ 2 years):</strong> Jan&nbsp;2023–Mar&nbsp;2025 is one regime (post-FTX recovery, ETF-driven cycle). What works in this
-              window may not generalize to earlier cycles. Extending the sample (e.g., 2019–2025) would likely reduce AUCs.</li>
-          <li><strong>Subtle leakage / regime cues:</strong> Even with time-ordered splits, leakage can sneak in—for example if PCA is fitted on the full
-              sample instead of training only. Non-stationary features (e.g., hash rate, difficulty) can also proxy “time” and inflate separability.</li>
-        </ol>
-        <p>
-          How I’d harden this:
-        </p>
-        <ul>
-          <li>Fit PCA on the <em>training</em> set only; transform the test set afterwards.</li>
-          <li>Use walk-forward (rolling) validation across multiple sub-periods.</li>
-          <li>Difference or de-trend strongly non-stationary inputs; re-test with alternative target definitions.</li>
-        </ul>
-        <p>
-          Bottom line: the method is solid, but the **AUC ≈ 0.90** should be treated as an upper bound in this short horizon—not a guarantee out of sample.
-        </p>
-
-        <h2>Implementation notes (Python)</h2>
-        <p>
-          I wrote the data assembly in <code>Database_code.txt</code> (Yahoo Finance, Blockchain.com, Fear &amp; Greed), and modeling in
-          <code>PCA_Supervised_Learning-Code.py</code>. Key steps:
-        </p>
-        <ul>
-          <li>Log transforms for skewed series; returns for price series; standardization before PCA.</li>
-          <li>Retain PCs 1–6; standardize PC1 as the FCI.</li>
-          <li>Binary target: BTC volatility &gt; median; fit LR/LDA/QDA; report ROC-AUC + confusion matrices.</li>
-        </ul>
 
         <h2>Takeaways</h2>
+        <p>
+          Despite limitations, the experiment shows that:
+        </p>
         <ul>
-          <li>A crypto FCI built via PCA is feasible and informative.</li>
-          <li>Supervised models can turn that FCI into actionable risk signals.</li>
-          <li>Generalization demands more history and stricter validation (walk-forward, train-only PCA, stationarity checks).</li>
+          <li>A crypto-specific FCI can summarize complex conditions into one metric.</li>
+          <li>Machine learning models can turn that index into predictive risk signals.</li>
+          <li>Critical thinking is essential: with short data horizons, results must be treated as upper bounds, not guarantees.</li>
         </ul>
+        <p>
+          For me, the main lesson is that the combination of macro signals and blockchain fundamentals is powerful. With better data availability,
+          these methods could evolve into real-time tools for portfolio managers navigating the volatility of crypto markets.
+        </p>
 
         <p style="margin-top:28px;">
           <a class="btn btn-outline" href="../index.html#research">← Back to research</a>
