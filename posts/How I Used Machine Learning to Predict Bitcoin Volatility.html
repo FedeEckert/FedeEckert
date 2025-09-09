@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>How I used Machine Learning to predict Bitcoin Volatility — Federico Eckert</title>
+  <title>How I Used Machine Learning to Predict Bitcoin Volatility — Federico Eckert</title>
   <meta name="description" content="A Python-driven case study: assembling macro + on-chain data, using PCA to build a Financial Conditions Index for crypto, and testing predictive power with supervised learning." />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css" />
   <style>
-    /* modest, centered figures */
     figure { max-width: 720px; margin: 22px auto; text-align: center; }
     figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(2,6,23,0.08); }
     figure figcaption { font-size: 0.92rem; color: rgba(2,6,23,0.72); margin-top: 8px; }
@@ -32,7 +31,7 @@
       <div class="container">
         <p><a class="btn btn-outline" href="../index.html#research">← Back to research</a></p>
 
-        <h1>Measuring Crypto’s Nerves: Building a Financial Conditions Index (FCI) for Bitcoin</h1>
+        <h1>How I Used Machine Learning to Predict Bitcoin Volatility</h1>
         <p class="section-lead">
           A data science case study from my MSc: I pulled macro + crypto-native signals, used PCA to build a Financial Conditions Index (FCI),
           and tested whether it predicts Bitcoin volatility with supervised learning in Python.
@@ -80,9 +79,14 @@
 
         <h2>Does the FCI line up with stress?</h2>
         <p>
-          Visual inspection (not shown here) indicates the FCI rises during known stress windows and co-moves with BTC volatility. Intuition checks out:
-          when liquidity thins and crypto-native risk builds, PC1 tightens—and volatility follows.
+          The Financial Conditions Index rises during known stress windows and co-moves with BTC volatility—consistent with the intuition that when
+          liquidity thins and crypto-native risk builds, PC1 tightens and volatility follows.
         </p>
+
+        <figure>
+          <img src="../posts/Data/FCI-Vol.jpeg" alt="Time series overlay of FCI and Bitcoin daily volatility" />
+          <figcaption><strong>Figure 3.</strong> FCI vs. BTC Volatility: clear co-movement during stress episodes.</figcaption>
+        </figure>
 
         <h2>Turning it into a prediction problem</h2>
         <p>
@@ -92,12 +96,12 @@
 
         <figure>
           <img src="../posts/Data/ROC.jpeg" alt="ROC curves for LR, LDA, QDA predicting high BTC volatility" />
-          <figcaption><strong>Figure 3.</strong> ROC curves: all models achieved high AUCs (≈0.90). See caveats below on why this might be “too perfect”.</figcaption>
+          <figcaption><strong>Figure 4.</strong> ROC curves: all models achieved high AUCs (≈0.90). See caveats below on why this might be “too perfect”.</figcaption>
         </figure>
 
         <figure>
           <img src="../posts/Data/Confusion-matrix.jpeg" alt="Confusion matrices comparing model trade-offs (recall vs false positives)" />
-          <figcaption><strong>Figure 4.</strong> Confusion matrices: LR was aggressive (high recall, more false positives), LDA balanced, QDA conservative (fewer false alarms, more misses).</figcaption>
+          <figcaption><strong>Figure 5.</strong> Confusion matrices: LR was aggressive (high recall, more false positives), LDA balanced, QDA conservative (fewer false alarms, more misses).</figcaption>
         </figure>
 
         <h2>What the results suggest</h2>
@@ -139,19 +143,6 @@
           <li>Retain PCs 1–6; standardize PC1 as the FCI.</li>
           <li>Binary target: BTC volatility &gt; median; fit LR/LDA/QDA; report ROC-AUC + confusion matrices.</li>
         </ul>
-
-        <h2>Context: why an FCI for crypto?</h2>
-        <p>
-          Crypto straddles macro and on-chain. A compact index that distills both can help practitioners “feel the tape” quantitatively—especially in
-          regime shifts when correlations flip and liquidity fragments. The goal isn’t to replace judgment, but to give it a cleaner signal.
-        </p>
-
-        <!-- Optional context figures if you want to use them later
-        <figure>
-          <img src="../posts/Data/Inflation.jpeg" alt="Macro context example" />
-          <figcaption><strong>Appendix Figure.</strong> Macro context (optional for this post).</figcaption>
-        </figure>
-        -->
 
         <h2>Takeaways</h2>
         <ul>
