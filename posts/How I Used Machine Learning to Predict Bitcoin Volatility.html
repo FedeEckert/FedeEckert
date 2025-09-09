@@ -42,13 +42,13 @@
 
         <h1>How I Used Machine Learning to Predict Bitcoin Volatility</h1>
         <p class="section-lead">
-          Crypto markets are famously volatile. In this project, I set out to answer a simple question:
-          can we build a single index that captures the financial conditions around Bitcoin and use it to anticipate volatility?
+          In this project, I set out to answer a simple question:
+          can we build an  index that captures the financial conditions around Bitcoin and use it to anticipate volatility?
         </p>
         <hr style="border-color:rgba(2,6,23,0.08);margin:18px 0" />
         <p><em>Published: 9 Sep 2025 · 10–12 min</em></p>
 
-        <h2>Dataset construction</h2>
+        <h2>Building the Dataset</h2>
         <p>
           The starting point for any attempt to measure financial conditions is the data. For crypto, that means blending two worlds:
           the traditional financial system and the blockchain-native one. To do this, I assembled a dataset with <strong>22 variables</strong>
@@ -56,7 +56,7 @@
         </p>
         <p>
           On the traditional side, I pulled equity market proxies (S&amp;P 500, NASDAQ, Dow Jones, Russell 2000), commodities (gold, silver, oil),
-          the US dollar index, Treasury yields, and the VIX. Together, these track monetary policy, inflation hedging, and investor risk appetite.
+          the US dollar index, Treasury yields, and the VIX (Volatility Index). Together, these track monetary policy, inflation hedging, and investor risk appetite.
         </p>
         <p>
           On the crypto side, I included Bitcoin and Ethereum prices, trading volumes, and intraday volatility. To capture fundamentals,
@@ -75,10 +75,10 @@
 
         <figure>
           <img src="../posts/Data/Correlation-matrix.jpeg" alt="Correlation heatmap among macro, crypto, and on-chain variables">
-          <figcaption><strong>Figure 1.</strong> Correlation map: equities cluster together, crypto vols correlate with each other, justifying dimensionality reduction.</figcaption>
+          <figcaption><strong>Figure 1.</strong> Correlation map: equities cluster together, crypto vols correlate with each other, justifying following steps of dimensionality reduction.</figcaption>
         </figure>
 
-        <h2>From 22 variables to one index</h2>
+        <h2>Using PCA to conform an Index</h2>
         <p>
           To simplify the complexity, I used Principal Component Analysis (PCA). This method compresses the information into a handful of latent factors.
           The first six components explained around 70% of total variance, with the first component (PC1) dominated by crypto-native signals like BTC/ETH volumes,
@@ -104,8 +104,8 @@
         <h2>Predicting volatility with machine learning</h2>
         <p>
           Next, I turned the problem into prediction. I defined high volatility as days where Bitcoin’s volatility exceeded its median,
-          and trained three models—Logistic Regression, Linear Discriminant Analysis (LDA), and Quadratic Discriminant Analysis (QDA)—
-          using the first six PCs as features. To avoid leakage, the data split respected time order.
+          and trained three models—Logistic Regression, Linear Discriminant Analysis (LDA), and Quadratic Discriminant Analysis (QDA), 
+          using the first six PCs as features (together they have 70% of explainatory power). To avoid leakage, the data split respected time order.
         </p>
 
         <figure>
