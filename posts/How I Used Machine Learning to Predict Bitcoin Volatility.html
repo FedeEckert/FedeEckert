@@ -5,21 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>How I Used Machine Learning to Predict Bitcoin Volatility — Federico Eckert</title>
   <meta name="description" content="A case study on building a Financial Conditions Index (FCI) for crypto using PCA and testing its predictive power on Bitcoin volatility with supervised learning." />
+
+  <!-- Fonts & styles -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css" />
+
+  <!-- Favicon (logo mate) -->
+  <link rel="icon" href="../assets/Logo1.png" type="image/png" />
+
+  <!-- Local tweaks for figures -->
   <style>
-    figure { max-width: 720px; margin: 22px auto; text-align: center; }
-    figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(2,6,23,0.08); }
-    figure figcaption { font-size: 0.92rem; color: rgba(2,6,23,0.72); margin-top: 8px; }
+    figure{max-width:720px;margin:22px auto;text-align:center}
+    figure img{width:100%;height:auto;border-radius:8px;border:1px solid rgba(2,6,23,0.08)}
+    figure figcaption{font-size:.92rem;color:rgba(2,6,23,0.72);margin-top:8px}
   </style>
 </head>
-<body>
+
+<!-- Fondo plano sin radiales -->
+<body class="post-page">
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="../index.html"><span>Federico Eckert</span></a>
+      <a class="brand" href="../index.html">
+        <img src="../assets/Logo1.png" alt="" class="logo" />
+        <span>Federico Eckert</span>
+      </a>
       <nav class="nav-links">
-        <a href="../index.html#research">Research</a>
-        <a href="../index.html#about">About</a>
         <a href="../index.html#contact">Contact</a>
       </nav>
     </div>
@@ -35,7 +45,7 @@
           Crypto markets are famously volatile. In this project, I set out to answer a simple question:
           can we build a single index that captures the financial conditions around Bitcoin and use it to anticipate volatility?
         </p>
-        <hr style="border-color:rgba(2,6,23,0.08); margin:18px 0;" />
+        <hr style="border-color:rgba(2,6,23,0.08);margin:18px 0" />
         <p><em>Published: 9 Sep 2025 · 10–12 min</em></p>
 
         <h2>Dataset construction</h2>
@@ -64,7 +74,7 @@
         </p>
 
         <figure>
-          <img src="../posts/Data/Correlation-matrix.jpeg" alt="Correlation heatmap among macro, crypto, and on-chain variables" />
+          <img src="../posts/Data/Correlation-matrix.jpeg" alt="Correlation heatmap among macro, crypto, and on-chain variables">
           <figcaption><strong>Figure 1.</strong> Correlation map: equities cluster together, crypto vols correlate with each other, justifying dimensionality reduction.</figcaption>
         </figure>
 
@@ -76,7 +86,7 @@
         </p>
 
         <figure>
-          <img src="../posts/Data/PCA.jpeg" alt="Scree plot showing explained variance across components" />
+          <img src="../posts/Data/PCA.jpeg" alt="Scree plot showing explained variance across components">
           <figcaption><strong>Figure 2.</strong> Scree plot: the first six components were retained, balancing explanatory power and parsimony.</figcaption>
         </figure>
 
@@ -87,7 +97,7 @@
         </p>
 
         <figure>
-          <img src="../posts/Data/Vol-FCI.jpeg" alt="Time series of FCI plotted against BTC volatility" />
+          <img src="../posts/Data/Vol-FCI.jpeg" alt="Time series of FCI plotted against BTC volatility">
           <figcaption><strong>Figure 3.</strong> FCI vs BTC Volatility: the index climbs during volatility spikes.</figcaption>
         </figure>
 
@@ -99,7 +109,7 @@
         </p>
 
         <figure>
-          <img src="../posts/Data/ROC.jpeg" alt="ROC curves for LR, LDA, QDA models" />
+          <img src="../posts/Data/ROC.jpeg" alt="ROC curves for LR, LDA, QDA models">
           <figcaption><strong>Figure 4.</strong> ROC curves: all models delivered high AUCs (~0.90). This looks promising—but also suspiciously clean.</figcaption>
         </figure>
 
@@ -117,14 +127,12 @@
         </p>
 
         <figure>
-          <img src="../posts/Data/Confusion-matrix.jpeg" alt="Confusion matrices of the models" />
+          <img src="../posts/Data/Confusion-matrix.jpeg" alt="Confusion matrices of the models">
           <figcaption><strong>Figure 5.</strong> Confusion matrices: different trade-offs between missing signals and false alarms.</figcaption>
         </figure>
 
         <h2>Takeaways</h2>
-        <p>
-          Despite limitations, the experiment shows that:
-        </p>
+        <p>Despite limitations, the experiment shows that:</p>
         <ul>
           <li>A crypto-specific FCI can summarize complex conditions into one metric.</li>
           <li>Machine learning models can turn that index into predictive risk signals.</li>
@@ -135,7 +143,7 @@
           these methods could evolve into real-time tools for portfolio managers navigating the volatility of crypto markets.
         </p>
 
-        <p style="margin-top:28px;">
+        <p style="margin-top:28px">
           <a class="btn btn-outline" href="../index.html#research">← Back to research</a>
         </p>
       </div>
