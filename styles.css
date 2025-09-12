@@ -293,18 +293,35 @@ body{
   }
 }
 
-.cards-row {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+/* Scroll horizontal conservando EXACTO look 3-col */
+.cards-scroll{
+  overflow-x:auto; padding-bottom:10px; /* scroll suave + un poco de aire abajo */
 }
 
-.cards-row .card {
-  flex: 0 0 320px;   /* ancho fijo similar al de tu grilla */
-  max-width: 320px; /* evita que se estiren */
-  scroll-snap-align: start;
+.cards-row{
+  --gap:16px;
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns: calc((100% - var(--gap) * 2) / 3); /* 3 columnas visibles, 2 gaps */
+  gap: var(--gap);
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
 }
+
+.cards-row > .card{
+  scroll-snap-align:start; /* cada card “encaja” al scrollear */
+}
+
+/* En mobile tu site ya usa 1 col → reflejamos eso aquí */
+@media (max-width: 880px){
+  .cards-row{
+    grid-auto-columns: 100%;        /* 1 columna por vista, como tu grilla */
+    --gap:16px;
+  }
+}
+
+/* (opcional) scrollbar discreto */
+.cards-scroll::-webkit-scrollbar{height:8px}
+.cards-scroll::-webkit-scrollbar-thumb{background:rgba(2,6,23,.12);border-radius:8px}
+.cards-scroll{scrollbar-width:thin}
 
