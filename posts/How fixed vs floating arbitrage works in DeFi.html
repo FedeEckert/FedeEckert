@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>How Fixed vs. Floating Arbitrage Works in DeFi — Federico Eckert</title>
   <meta name="description" content="A clear walkthrough of fixed–floating rate arbitrage in DeFi using Pendle and Aave, with the core math, example P&L, risks, and execution tips." />
+
+  <!-- Fonts & site styles -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css" />
+
+  <!-- Favicon (mate) -->
+  <link rel="icon" href="../assets/Logo1.png" type="image/png" />
+
+  <!-- Local tweaks for figures / code blocks -->
   <style>
     figure { max-width: 720px; margin: 22px auto; text-align: center; }
     figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(2,6,23,0.08); }
@@ -17,13 +24,15 @@
     details summary { cursor: pointer; font-weight: 600; }
   </style>
 </head>
-<body>
+
+<body class="post-page">
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="../index.html"><span>Federico Eckert</span></a>
+      <a class="brand" href="../index.html">
+        <img src="../assets/Logo1.png" alt="" class="logo" />
+        <span>Federico Eckert</span>
+      </a>
       <nav class="nav-links">
-        <a href="../index.html#research">Research</a>
-        <a href="../index.html#about">About</a>
         <a href="../index.html#contact">Contact</a>
       </nav>
     </div>
@@ -87,8 +96,8 @@
           sits near <span class="math">r_var = 7.67%</span>. On <span class="math">N = $1,000,000</span>, with all-in fees <span class="math">c = 0.20%</span> and
           <span class="math">T = 33/365</span> years:
         </p>
-        <pre><code>P&L ≈ 1,000,000 × (0.1549 − 0.0767) × (33/365) − 0.002 × 1,000,000
-    ≈ 7,070 − 2,000 = $5,070  (for 33 days)
+<pre><code>P&L ≈ 1,000,000 × (0.1549 − 0.0767) × (33/365) − 0.002 × 1,000,000
+≈ 7,070 − 2,000 = $5,070  (for 33 days)
 Annualized ≈ 5.61% net
 Breakeven r_var* = 0.1549 − (0.002 / (33/365)) ≈ 13.28%</code></pre>
         <p>
