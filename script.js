@@ -53,3 +53,40 @@ function toggleNav(){
   // Por si las fuentes reflowean el layout:
   setTimeout(toggleVisibility, 250);
 })();
+
+
+<script>
+(function(){
+  const wrap  = document.getElementById('researchCarousel');
+  if(!wrap) return;
+
+  const track = wrap.querySelector('.cards-track');
+  const prev  = wrap.querySelector('.cards-arrow.prev');
+  const next  = wrap.querySelector('.cards-arrow.next');
+  const gap   = parseFloat(getComputedStyle(track).gap) || 16;
+
+  function cardStep(){
+    const first = track.querySelector('.card');
+    if(!first) return 0;
+    return first.getBoundingClientRect().width + gap;
+  }
+
+  function updateArrows(){
+    const max = track.scrollWidth - track.clientWidth - 1;
+    prev.disabled = track.scrollLeft <= 0;
+    next.disabled = track.scrollLeft >= max;
+  }
+
+  function go(dir){
+    track.scrollBy({ left: dir * cardStep(), behavior: 'smooth' });
+    setTimeout(updateArrows, 350);
+  }
+
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+  track.addEventListener('scroll', updateArrows, { passive: true });
+  window.addEventListener('resize', updateArrows);
+
+  updateArrows();
+})();
+</script>
