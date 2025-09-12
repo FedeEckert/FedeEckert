@@ -45,24 +45,24 @@
 
         <h1>How Fixed vs. Floating Arbitrage Works in DeFi</h1>
         <p class="section-lead">
-          In traditional markets, traders earn carry by receiving a fixed rate and paying a floating rate. DeFi now lets you do the same—
-          entirely on-chain—using <strong>Pendle</strong> to lock a fixed yield and <strong>Aave</strong> to finance it with a floating-rate loan.
+          In traditional markets, traders earn carry by receiving a fixed rate and paying a floating rate. DeFi lets you do the same,
+          entirely on-chain, using <strong>Pendle</strong> to lock a fixed yield and <strong>Aave</strong> to finance it with a floating-rate loan.
           Below I explain the intuition, show the core math, and walk through an example and the risks.
         </p>
         <hr style="border-color:rgba(2,6,23,0.08); margin:18px 0;" />
-        <p><em>Published: 9 Sep 2025 · 8–10 min</em></p>
+        <p><em>Estimated read time · 8–10 min</em></p>
 
-        <h2>The idea in one paragraph</h2>
+        <h2>The intuition</h2>
         <p>
-          You buy a <em>Principal Token</em> (PT) on Pendle that redeems for 1 unit of the underlying stable at maturity. Because it trades
+          You buy a <em>Principal Token</em> (PT) on Pendle that redeems for 1 unit of the underlying stable at maturity, and because it trades
           at a discount today, it embeds a <strong>fixed yield</strong>. You fund this purchase by borrowing the same stablecoin on Aave at a
-          <strong>floating</strong> rate. Hold to maturity, and your P&amp;L is the fixed yield you locked minus the floating rate you paid (net of fees).
-          Conceptually, you’ve built an on-chain <em>receive-fixed / pay-float</em> swap—delta-neutral in stables.
+          <strong>floating</strong> rate. the idea is that if you hold the PT to maturity, then your P&amp;L is the fixed yield you locked minus the floating rate you paid (net of fees).
+          Conceptually, you’ve built an on-chain <em>receive-fixed / pay-float</em> swap that is delta-neutral in stables.
         </p>
 
         <h2>How Pendle PTs deliver a fixed rate</h2>
         <p>
-          Pendle splits a yield-bearing asset into a Principal Token (PT) and a Yield Token (YT). The PT pays back exactly 1 unit at maturity <span class="math">T</span>.
+          Pendle splits a yield-bearing asset into a Principal Token (PT) and a Yield Token (YT). The PT pays back exactly 1 unit at maturity <span class="math">T</span> and trades at a discount bearing an interest rate.
           If today’s PT price is <span class="math">P_PT &lt; 1</span>, the effective annual fixed rate is:
         </p>
         <p class="callout">
