@@ -293,19 +293,18 @@ body{
   }
 }
 
-/* Scroll horizontal for research cards */
-.cards-scroll {
-  overflow-x: auto;
-  padding-bottom: 10px;
-  margin: 0 -10px; /* opcional: para usar todo el ancho */
-}
-
 .cards-row {
   display: flex;
   gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
 .cards-row .card {
-  min-width: 300px;  /* cada card ocupa al menos este ancho */
-  flex: 0 0 auto;    /* evita que se estiren demasiado */
+  flex: 0 0 320px;   /* ancho fijo similar al de tu grilla */
+  max-width: 320px; /* evita que se estiren */
+  scroll-snap-align: start;
 }
+
