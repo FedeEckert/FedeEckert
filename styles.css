@@ -351,6 +351,41 @@ body{
   border-radius: 8px;
 }
 .cards.is-scroll{ scrollbar-width: thin; }
+
+  /* === Horizontal scroll conservando EXACTO el look 3-col === */
+.cards.is-scroll{
+  /* anulamos definición de columnas auto-fit del grid original */
+  grid-template-columns: unset;
+
+  display: grid;
+  grid-auto-flow: column;
+  gap: 20px; /* igual a .cards */
+  /* 3 columnas visibles por pantalla: 2 gaps x 20px = 40px */
+  grid-auto-columns: calc((100% - 40px) / 3);
+
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.cards.is-scroll > .card{
+  scroll-snap-align: start;
+}
+
+/* En mobile, 1 card por vista (coherente con tu layout) */
+@media (max-width: 880px){
+  .cards.is-scroll{
+    grid-auto-columns: 100%;
+  }
+}
+
+/* Scrollbar discreto (opcional) */
+.cards.is-scroll::-webkit-scrollbar{ height: 8px; }
+.cards.is-scroll::-webkit-scrollbar-thumb{
+  background: rgba(2,6,23,0.12);
+  border-radius: 8px;
+}
+.cards.is-scroll{ scrollbar-width: thin; }
 }
 
 /* (opcional) scrollbar discreto */
