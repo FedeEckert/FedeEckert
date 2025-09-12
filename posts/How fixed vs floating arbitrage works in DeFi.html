@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How Fixed vs. Floating Arbitrage Works in DeFi — Federico Eckert</title>
+  <meta name="description" content="A clear walkthrough of fixed–floating rate arbitrage in DeFi using Pendle and Aave, with the core math, example P&L, risks, and execution tips." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    figure { max-width: 720px; margin: 22px auto; text-align: center; }
+    figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(2,6,23,0.08); }
+    figure figcaption { font-size: 0.92rem; color: rgba(2,6,23,0.72); margin-top: 8px; }
+    code, pre { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .math { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background: rgba(2,6,23,0.03); padding: 0 6px; border-radius: 4px; }
+    .callout { border-left: 3px solid rgba(2,6,23,0.2); padding: 12px 14px; background: rgba(2,6,23,0.03); border-radius: 6px; }
+    details summary { cursor: pointer; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../index.html"><span>Federico Eckert</span></a>
+      <nav class="nav-links">
+        <a href="../index.html#research">Research</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <article class="section">
+      <div class="container">
+        <p><a class="btn btn-outline" href="../index.html#research">← Back to research</a></p>
+
+        <h1>How Fixed vs. Floating Arbitrage Works in DeFi</h1>
+        <p class="section-lead">
+          In traditional markets, traders earn carry by receiving a fixed rate and paying a floating rate. DeFi now lets you do the same—
+          entirely on-chain—using <strong>Pendle</strong> to lock a fixed yield and <strong>Aave</strong> to finance it with a floating-rate loan.
+          Below I explain the intuition, show the core math, and walk through an example and the risks.
+        </p>
+        <hr style="border-color:rgba(2,6,23,0.08); margin:18px 0;" />
+        <p><em>Published: 9 Sep 2025 · 8–10 min</em></p>
+
+        <h2>The idea in one paragraph</h2>
+        <p>
+          You buy a <em>Principal Token</em> (PT) on Pendle that redeems for 1 unit of the underlying stable at maturity. Because it trades
+          at a discount today, it embeds a <strong>fixed yield</strong>. You fund this purchase by borrowing the same stablecoin on Aave at a
+          <strong>floating</strong> rate. Hold to maturity, and your P&amp;L is the fixed yield you locked minus the floating rate you paid (net of fees).
+          Conceptually, you’ve built an on-chain <em>receive-fixed / pay-float</em> swap—delta-neutral in stables.
+        </p>
+
+        <h2>How Pendle PTs deliver a fixed rate</h2>
+        <p>
+          Pendle splits a yield-bearing asset into a Principal Token (PT) and a Yield Token (YT). The PT pays back exactly 1 unit at maturity <span class="math">T</span>.
+          If today’s PT price is <span class="math">P_PT &lt; 1</span>, the effective annual fixed rate is:
+        </p>
+        <p class="callout">
+          <span class="math">r_fix = P_PT^{-1/T} − 1</span><br/>
+          <small>For short maturities, a handy approximation is <span class="math">r_fix ≈ (1 − P_PT) / (P_PT · T)</span>.</small>
+        </p>
+        <p>
+          Economically, buying a PT is like buying a zero-coupon bond that repays 1 at maturity. The discount you lock in today is your fixed return.
+        </p>
+
+        <h2>Financing with a floating-rate loan</h2>
+        <p>
+          On Aave, borrow rates float with utilization. If your average realized borrow over the life of the trade is <span class="math">r_var</span>,
+          and your notional is <span class="math">N</span>, the fixed–floating carry over the term is:
+        </p>
+        <p class="callout">
+          <span class="math">P&amp;L(0→T) ≈ N · (r_fix − r_var) · T − c · N</span><br/>
+          <small><span class="math">c</span> aggregates fees, slippage, funding spreads—quoted as a % of notional.</small>
+        </p>
+        <p>
+          A useful monitoring metric is the floating-rate breakeven:
+        </p>
+        <p class="callout">
+          <span class="math">r_var* = r_fix − c / T</span><br/>
+          <small>If the live borrow goes above <span class="math">r_var*</span>, your carry turns negative—time to reduce, refinance, or close.</small>
+        </p>
+
+        <h2>Worked example (illustrative)</h2>
+        <p>
+          Suppose PT–USDe (maturity in ≈33 days) implies a fixed yield of <span class="math">r_fix = 15.49%</span>, while Aave’s USDe borrow
+          sits near <span class="math">r_var = 7.67%</span>. On <span class="math">N = $1,000,000</span>, with all-in fees <span class="math">c = 0.20%</span> and
+          <span class="math">T = 33/365</span> years:
+        </p>
+        <pre><code>P&L ≈ 1,000,000 × (0.1549 − 0.0767) × (33/365) − 0.002 × 1,000,000
+    ≈ 7,070 − 2,000 = $5,070  (for 33 days)
+Annualized ≈ 5.61% net
+Breakeven r_var* = 0.1549 − (0.002 / (33/365)) ≈ 13.28%</code></pre>
+        <p>
+          The position earns positive carry so long as your realized floating rate stays below ~13.3% and you hold the PT to maturity.
+        </p>
+
+        <h2>Execution flow (fixed vs. floating)</h2>
+        <ol>
+          <li>Borrow the stablecoin (e.g., USDe) on Aave at floating APY <span class="math">r_var</span>.</li>
+          <li>Swap that stable into <strong>PT–USDe</strong> (same underlying) on Pendle at price <span class="math">P_PT</span>.</li>
+          <li>Hold the PT to maturity → redeem 1 USDe per PT → repay Aave principal + interest.</li>
+        </ol>
+        <p>
+          Structurally, you’re long “receive-fixed” (the PT) and short “pay-float” (the loan). There’s no directional bet on crypto prices or rates—
+          just a spread between independently set fixed and floating markets.
+        </p>
+
+        <h2>What can go wrong (and how to mitigate it)</h2>
+        <ul>
+          <li><strong>Rate risk:</strong> the floating borrow spikes and compresses your spread.<br/>
+              <em>Mitigation:</em> breakeven guard (<span class="math">r_var*</span>), rate alerts, option to refinance to a cheaper venue.</li>
+          <li><strong>Early-exit risk:</strong> the PT’s fixed payoff is only guaranteed at maturity; selling early can realize a loss if PT prices move against you.<br/>
+              <em>Mitigation:</em> size for hold-to-maturity; avoid forced unwinds; plan liquidity buffers.</li>
+          <li><strong>Asset/issuer risk:</strong> the stablecoin (e.g., USDe) could depeg.<br/>
+              <em>Mitigation:</em> depeg monitoring, diversified issuers, max exposure limits.</li>
+          <li><strong>Liquidity &amp; slippage:</strong> thin books on the PT series you need.<br/>
+              <em>Mitigation:</em> stage entries, set max slippage, trade during deeper liquidity windows.</li>
+          <li><strong>Smart-contract risk:</strong> protocol bugs or governance issues.<br/>
+              <em>Mitigation:</em> prioritize audited protocols, track bounty programs, cap per-protocol risk.</li>
+        </ul>
+
+        <h2>Why the opportunity exists</h2>
+        <p>
+          Pendle’s fixed rates are set in a market for discounted PTs. Aave’s floating rates are set by money-market utilization.
+          Because these mechanisms are <em>independent</em>, the same underlying stablecoin can have a rich fixed rate on Pendle while the
+          floating borrow on Aave remains cheap. The arbitrage is simply the disciplined harvesting of that structural dispersion.
+        </p>
+
+        <details>
+          <summary>Math appendix (derivations)</summary>
+          <p><strong>PT fixed rate:</strong> PT redeems 1 at maturity <span class="math">T</span>. If today’s price is <span class="math">P_PT</span>:</p>
+          <p class="math">r_fix = (1 / P_PT)^{1/T} − 1</p>
+          <p><small>First-order: <span class="math">r_fix ≈ (1 − P_PT) / (P_PT · T)</span> for small <span class="math">T</span>.</small></p>
+          <p><strong>Carry P&amp;L over the term:</strong></p>
+          <p class="math">P&amp;L(0→T) = N · (r_fix − r_var) · T − c · N</p>
+          <p><strong>Floating breakeven:</strong> set P&amp;L = 0 ⇒ <span class="math">r_var* = r_fix − c/T</span>.</p>
+        </details>
+
+        <h2>Final thought</h2>
+        <p>
+          Fixed–floating arbitrage in DeFi isn’t about heroics; it’s about process: lock a real fixed, fund it cheaply, monitor the breakeven,
+          and respect liquidity and issuer risk. As the ecosystem matures, these “boring” spreads are likely to become the backbone of
+          professional on-chain yield strategies.
+        </p>
+
+        <p style="margin-top:28px;">
+          <a class="btn btn-outline" href="../index.html#research">← Back to research</a>
+        </p>
+
+        <p style="margin-top:10px; color: rgba(2,6,23,0.6); font-size: 0.9rem;">
+          <em>Disclaimer: This article is for educational purposes only and does not constitute investment advice. DeFi carries risk, including smart-contract and issuer risk. Do your own research.</em>
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container"><small>© <span id="year"></span> Federico Eckert</small></div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
