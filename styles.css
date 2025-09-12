@@ -318,6 +318,39 @@ body{
     grid-auto-columns: 100%;        /* 1 columna por vista, como tu grilla */
     --gap:16px;
   }
+
+  /* === Horizontal scroll, conservando EXACTO el look 3-col === */
+.cards.is-scroll{
+  /* convierte la grilla a carrusel por columnas */
+  display: grid;
+  grid-auto-flow: column;
+  gap: 16px;
+  /* 3 columnas visibles: mismo ancho que tu grid original (2 gaps de 16px) */
+  grid-auto-columns: calc((100% - 32px) / 3);
+
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.cards.is-scroll > .card{
+  scroll-snap-align: start; /* cada card “encaja” al scrollear */
+}
+
+/* Mobile: tu sitio ya usa 1 col; acá reflejamos eso */
+@media (max-width: 880px){
+  .cards.is-scroll{
+    grid-auto-columns: 100%;
+  }
+}
+
+/* Scrollbar discreto (opcional) */
+.cards.is-scroll::-webkit-scrollbar{ height: 8px; }
+.cards.is-scroll::-webkit-scrollbar-thumb{
+  background: rgba(2,6,23,0.12);
+  border-radius: 8px;
+}
+.cards.is-scroll{ scrollbar-width: thin; }
 }
 
 /* (opcional) scrollbar discreto */
