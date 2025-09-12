@@ -393,3 +393,62 @@ body{
 .cards-scroll::-webkit-scrollbar-thumb{background:rgba(2,6,23,.12);border-radius:8px}
 .cards-scroll{scrollbar-width:thin}
 
+/* === Carrusel de cards con flechas (mantiene el look 3-col) === */
+.cards-carousel{
+  position: relative;
+  margin-top: 22px;
+}
+
+.cards-track{
+  --gap:16px;
+  display: grid;
+  grid-auto-flow: column;
+  gap: var(--gap);
+  /* 3 columnas visibles: mismo ancho visual que tu grid */
+  grid-auto-columns: calc((100% - var(--gap) * 2) / 3);
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.cards-track > .card{
+  scroll-snap-align: start;
+  /* Hereda tu .card tal cual, no cambiamos estilos internos */
+}
+
+/* Flechas */
+.cards-arrow{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  font-size: 22px; line-height: 1;
+  display: grid; place-items: center;
+  transition: transform .12s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.cards-arrow:hover{ transform: translateY(-50%) scale(1.05); box-shadow: 0 12px 24px rgba(2,6,23,0.12); }
+.cards-arrow:disabled{ opacity: .35; cursor: default; }
+
+.cards-arrow.prev{ left: -8px; }
+.cards-arrow.next{ right: -8px; }
+
+/* Scrollbar discreto */
+.cards-track::-webkit-scrollbar{ height: 8px; }
+.cards-track::-webkit-scrollbar-thumb{ background: rgba(2,6,23,0.12); border-radius: 8px; }
+.cards-track{ scrollbar-width: thin; }
+
+/* Responsivo: en tablets mostramos 2 por vista; en mobile, 1 */
+@media (max-width: 1024px){
+  .cards-track{ grid-auto-columns: calc((100% - var(--gap)) / 2); }
+}
+@media (max-width: 640px){
+  .cards-track{ grid-auto-columns: 100%; }
+  .cards-arrow.prev{ left: 0; }
+  .cards-arrow.next{ right: 0; }
+}
