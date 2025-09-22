@@ -90,6 +90,17 @@
           <small>If the live borrow goes above <span class="math">r_var*</span>, your carry turns negative—time to reduce, refinance, or close.</small>
         </p>
 
+        <h2>Execution flow (fixed vs. floating)</h2>
+        <ol>
+          <li>Borrow the stablecoin (e.g., USDe) on Aave at floating APY <span class="math">r_var</span>.</li>
+          <li>Swap that stable into <strong>PT–USDe</strong> (same underlying) on Pendle at price <span class="math">P_PT</span>.</li>
+          <li>Hold the PT to maturity → redeem 1 USDe per PT → repay Aave principal + interest.</li>
+        </ol>
+        <p>
+          Structurally, you’re long “receive-fixed” (the PT) and short “pay-float” (the loan). There’s no directional bet on crypto prices or rates—
+          just a spread between independently set fixed and floating markets.
+        </p>
+
         <h2>Worked example (illustrative)</h2>
         <p>
           Suppose PT–USDe (maturity in ≈33 days) implies a fixed yield of <span class="math">r_fix = 15.49%</span>, while Aave’s USDe borrow
@@ -102,17 +113,6 @@ Annualized ≈ 5.61% net
 Breakeven r_var* = 0.1549 − (0.002 / (33/365)) ≈ 13.28%</code></pre>
         <p>
           The position earns positive carry so long as your realized floating rate stays below ~13.3% and you hold the PT to maturity.
-        </p>
-
-        <h2>Execution flow (fixed vs. floating)</h2>
-        <ol>
-          <li>Borrow the stablecoin (e.g., USDe) on Aave at floating APY <span class="math">r_var</span>.</li>
-          <li>Swap that stable into <strong>PT–USDe</strong> (same underlying) on Pendle at price <span class="math">P_PT</span>.</li>
-          <li>Hold the PT to maturity → redeem 1 USDe per PT → repay Aave principal + interest.</li>
-        </ol>
-        <p>
-          Structurally, you’re long “receive-fixed” (the PT) and short “pay-float” (the loan). There’s no directional bet on crypto prices or rates—
-          just a spread between independently set fixed and floating markets.
         </p>
 
         <h2>What can go wrong (and how to mitigate it)</h2>
