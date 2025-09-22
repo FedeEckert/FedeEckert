@@ -56,7 +56,7 @@
         <p>
           You buy a <em>Principal Token</em> (PT) on Pendle that redeems for 1 unit of the underlying stable at maturity, and because it trades
           at a discount today, it embeds a <strong>fixed yield</strong>. You fund this purchase by borrowing the same stablecoin on Aave at a
-          <strong>floating</strong> rate. the idea is that if you hold the PT to maturity, then your P&amp;L is the fixed yield you locked minus the floating rate you paid (net of fees).
+          <strong>floating</strong> rate. The idea is that if you hold the PT to maturity, then your P&amp;L is the fixed yield you locked minus the floating rate you paid (net of fees).
           Conceptually, you’ve built an on-chain <em>receive-fixed / pay-float</em> swap that is delta-neutral in stables.
         </p>
 
@@ -80,14 +80,14 @@
         </p>
         <p class="callout">
           <span class="math">P&amp;L(0→T) ≈ N · (r_fix − r_var) · T − c · N</span><br/>
-          <small><span class="math">c</span> aggregates fees, slippage, funding spreads—quoted as a % of notional.</small>
+          <small><span class="math">c</span> aggregates fees, slippage, and  funding spreads (quoted as a % of notional).</small>
         </p>
         <p>
           A useful monitoring metric is the floating-rate breakeven:
         </p>
         <p class="callout">
           <span class="math">r_var* = r_fix − c / T</span><br/>
-          <small>If the live borrow goes above <span class="math">r_var*</span>, your carry turns negative—time to reduce, refinance, or close.</small>
+          <small>If the live borrow rate goes above <span class="math">r_var*</span>, your carry turns negative, meaning that it is time to reduce, refinance, or close the trade.</small>
         </p>
 
         <h2>Execution flow (fixed vs. floating)</h2>
@@ -103,8 +103,9 @@
 
         <h2>Worked example (illustrative)</h2>
         <p>
-          Suppose PT–USDe (maturity in ≈33 days) implies a fixed yield of <span class="math">r_fix = 15.49%</span>, while Aave’s USDe borrow
-          sits near <span class="math">r_var = 7.67%</span>. On <span class="math">N = $1,000,000</span>, with all-in fees <span class="math">c = 0.20%</span> and
+          <small>The numbers on this worked example are real values captured on August 23rd 2025 on Aave and Pendle</small>
+          The PT–USDe (maturity in ≈33 days) implies a fixed yield of <span class="math">r_fix = 15.49%</span>, while Aave’s USDe borrow
+          sits near <span class="math">r_var = 7.67%</span>. Supose we took a capital investment of <span class="math">N = $1,000,000</span>, with all-in fees <span class="math">c = 0.20%</span> and
           <span class="math">T = 33/365</span> years:
         </p>
 <pre><code>P&L ≈ 1,000,000 × (0.1549 − 0.0767) × (33/365) − 0.002 × 1,000,000
@@ -148,9 +149,8 @@ Breakeven r_var* = 0.1549 − (0.002 / (33/365)) ≈ 13.28%</code></pre>
 
         <h2>Final thought</h2>
         <p>
-          Fixed–floating arbitrage in DeFi isn’t about heroics; it’s about process: lock a real fixed, fund it cheaply, monitor the breakeven,
-          and respect liquidity and issuer risk. As the ecosystem matures, these “boring” spreads are likely to become the backbone of
-          professional on-chain yield strategies.
+          Fixed–floating arbitrage in DeFi represent a real opportunity for carry P&amp;L. However, it is extremely important to monitor the breakeven point to avoid losses,
+          and acknowledge liquidity and issuer risk. In my personal opinion, these on-chain yield strategies represent a great opportunity for DeFi and crypto funds to gain delta neutral profits in a highly volatile market.
         </p>
 
         <p style="margin-top:28px;">
