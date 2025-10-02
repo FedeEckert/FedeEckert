@@ -51,25 +51,28 @@
         <p><em>Estimated read time · 8–10 min</em></p>
 
         <!-- === CONTENIDO === -->
-        <h2>dYdX Protocol Overview</h2>
-        <p>
          <h2>dYdX Protocol Overview</h2>
         <p>
           dYdX is a decentralized perpetual futures exchange that operates as its own <strong>app-chain</strong> within the Cosmos ecosystem.
           Unlike AMM-based DEXs, it runs a <strong>central limit order book (CLOB)</strong> built directly into the chain’s validator network.
-          This architecture allows dYdX to combine the transparency of blockchain settlement with the execution quality of a professional derivatives exchange.
+          This architecture allows dYdX to combine the transparency of blockchain settlement with the execution quality of a professional derivatives exchange. Additionally, users must set collateral and pay for trading fees in USDC, generating a USDC denominated revenue stream for the protocol.
+        </p>
+        
+        <p class="callout">
+          Why CLOBs matter: for high-leverage, latency-sensitive perp trading, a matching engine with a live order book often provides better price discovery
+          and capital efficiency than constant-product AMMs. dYdX brings that experience on-chain.
         </p>
         
         <p>
           The network is secured by a set of <strong>validators</strong> who run full nodes, produce blocks, and host the off-chain components of the order book.
-          Validators earn <strong>USDC-denominated trading fees</strong> for providing this service. To align incentives and decentralize control,
+          Validators earn previously earned <strong>USDC-denominated trading fees</strong> for providing this service. Every token holder has the right to participate in the validation process, but in order to align incentives and decentralize control,
           token holders can <strong>delegate their DYDX</strong> to validators, becoming <strong>stakers</strong>.
         </p>
         
         <p>
           <strong>Stakers</strong> play two roles:
-          (1) they participate in governance by voting on protocol upgrades, parameters, and listings; and
-          (2) they share in the USDC rewards earned by validators. In practice, this means DYDX holders must stake their tokens
+          (1) They participate in governance by voting on protocol upgrades, parameters, and listings; and
+          (2) They share in the USDC rewards earned by validators. In practice, this means DYDX holders must stake their tokens
           to capture the protocol’s cash flows, creating a link between governance, security, and token demand.
         </p>
         
@@ -89,24 +92,14 @@
           and stakers govern and benefit from the system’s growth.
         </p>
         </p>
-        <p class="callout">
-          Why CLOBs matter: for high-leverage, latency-sensitive perp trading, a matching engine with a live order book often provides better price discovery
-          and capital efficiency than constant-product AMMs. dYdX brings that experience on-chain.
-        </p>
+        
 
-        <h2>Why the architecture makes sense</h2>
-        <p>
-          The app-chain model gives dYdX full control over block production, order-book logic and latency targets—key for derivatives. Meanwhile,
-          settling collateral and fees in USDC avoids the “reflexive token emission” trap common in DeFi: traders pay in dollars, and the network
-          distributes real, dollar-denominated cash flows to validators and stakers.
-        </p>
-
-        <h2>Tokenomics at a glance</h2>
+        <h2>Tokenomics</h2>
         <p>
           The DYDX token underpins governance and economic alignment of the chain. Two design choices stand out:
         </p>
         <ul>
-          <li><strong>Hard-capped supply:</strong> DYDX has a fixed maximum supply of <strong>1 billion</strong> tokens—no ongoing inflationary rewards.</li>
+          <li><strong>Hard-capped supply:</strong> DYDX has a fixed maximum supply of <strong>1 billion</strong> tokens, so no ongoing inflationary rewards.</li>
           <li><strong>USDC fee accrual:</strong> Trading fees are earned in USDC and flow to <strong>validators and stakers</strong> who secure and govern the network.</li>
         </ul>
         <p>
@@ -116,13 +109,12 @@
 
         <h2>Supply, “minting,” and the fixed-supply effect</h2>
         <p>
-          DYDX’s supply is <strong>hard-capped</strong> at 1B. In practical terms, there is no “yield minting” for stakers; rewards come from USDC fees,
-          not new tokens. The fixed cap acts as a brake on dilution: as long as the network grows, circulating DYDX does not need to expand to fund it.
+          The fixed cap acts as a brake on dilution: as long as the network grows, circulating DYDX does not need to expand to fund it.
           Over time, this can make the token’s economics feel more “equity-like”: holders and stakers capture usage-linked cash flows while the
           outstanding share count stays bounded.
         </p>
 
-        <h2>How stakers get paid (and why that can lift the token)</h2>
+        <h2>The virtuos cycle design</h2>
         <p>
           Because staking yield is paid in <strong>USDC</strong>, would-be participants must first <em>acquire</em> DYDX to stake and share in those dollar cash flows.
           That creates potential <strong>incremental demand</strong> for the token. Meanwhile, staked tokens are locked, which can <strong>reduce liquid float</strong>.
@@ -130,7 +122,6 @@
           for DYDX. This is the core “beneficiary cycle” embedded in the design.
         </p>
 
-        <h2>The beneficiary cycle (flywheel)</h2>
         <ol>
           <li><strong>More trading volume</strong> on dYdX → higher <strong>USDC fee income</strong>.</li>
           <li>Higher USDC fee income → <strong>better staking yields</strong> for validators/stakers.</li>
@@ -141,8 +132,8 @@
 
         <h2>What makes dYdX interesting/innovative</h2>
         <ul>
-          <li><strong>CEX-grade perps, decentralized:</strong> CLOB on an app-chain aims to deliver exchange-quality execution in a trustless environment—rare among DEXs.</li>
-          <li><strong>Usage-linked, dollar cash flows:</strong> Few DeFi tokens route real USDC fees to stakers/validators with <em>no</em> token inflation,
+          <li><strong>CEX-grade perps, decentralized:</strong> CLOB on an app-chain aims to deliver exchange-quality execution in a trustless environment, rare among DEXs.</li>
+          <li><strong>Usage-linked, dollar cash flows:</strong> Few DeFi tokens route real USDC revenue to stakers/validators,
               aligning token demand with protocol adoption.</li>
           <li><strong>Clear economic loop:</strong> As volumes scale, rewards rise in a neutral unit (USDC), which can increase staking demand and
               reduce sell pressure versus emission-driven models.</li>
@@ -156,11 +147,10 @@
           <li><strong>Latency/uptime:</strong> execution quality for CLOB trading on the app-chain.</li>
         </ul>
 
-        <h2>Closing thought</h2>
+        <h2>Takeaway</h2>
         <p>
-          dYdX’s tokenomics flip a familiar DeFi script. Instead of inflating a native token to subsidize activity, it routes <strong>real USDC</strong> fees to the
-          actors who keep the network performant. Combined with a fixed supply and a trading engine built for derivatives,
-          the design targets a simple promise: if usage grows, <em>stakers get paid in dollars</em>—and the token’s role becomes the gateway to those cash flows.
+          dYdX’s tokenomics offer a peculiar tokenomics design to offer real USDC denominated reveue to the participants that keep the network performant. Combined with a fixed supply and a trading engine built for derivatives,
+          the design targets a simple promise: if usage grows, <em>stakers get paid in dollars</em>—and the token’s role becomes the gateway to those cash flows. It is also worth mentioning that the value proposition is extremely interesting, because dYdX made the deliberate choice to launch as a sovereign Layer-1 specifically to support an on-chain central limit order book. By controlling its own chain, dYdX can tailor block times, validator responsibilities, and consensus parameters to optimize purely for perpetual futures trading. This vertical integration gives it the ability to deliver CEX-level performance in a decentralized setting, something that was previously thought impractical for order-book based systems.
         </p>
 
         <p style="margin-top:28px;">
