@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>dYdX Tokenomics: How a Decentralized Perps Exchange Links Usage to Cash Flows — Federico Eckert</title>
   <meta name="description" content="A tokenomics deep dive into dYdX (DYDX): how the protocol works, why its CLOB + app-chain design makes sense, and how USDC fee accrual and a fixed supply create a value-capture flywheel." />
+
+  <!-- Fonts & styles -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css" />
+
+  <!-- Favicon (logo mate) -->
+  <link rel="icon" href="../assets/Logo1.png" type="image/png" />
+
+  <!-- Local tweaks for figures -->
   <style>
     figure { max-width: 720px; margin: 22px auto; text-align: center; }
     figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(2,6,23,0.08); }
@@ -15,13 +22,16 @@
     .kpi li { margin-bottom: 6px; }
   </style>
 </head>
-<body>
+
+<!-- Fondo plano sin radiales -->
+<body class="post-page">
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="../index.html"><span>Federico Eckert</span></a>
+      <a class="brand" href="../index.html">
+        <img src="../assets/Logo1.png" alt="" class="logo" />
+        <span>Federico Eckert</span>
+      </a>
       <nav class="nav-links">
-        <a href="../index.html#research">Research</a>
-        <a href="../index.html#about">About</a>
         <a href="../index.html#contact">Contact</a>
       </nav>
     </div>
@@ -40,24 +50,24 @@
         <hr style="border-color:rgba(2,6,23,0.08); margin:18px 0;" />
         <p><em>Published: 2 Oct 2025 · 8–10 min</em></p>
 
+        <!-- === CONTENIDO === -->
         <h2>What dYdX is (and how it works)</h2>
         <p>
           dYdX is a decentralized exchange focused on perpetual futures. It operates as a <strong>sovereign Layer-1 chain</strong> (built on Cosmos)
           and uses a <strong>central limit order book (CLOB)</strong> rather than an AMM. That lets it deliver CEX-style order types, tight spreads and
           deep liquidity—but on a trustless, non-custodial venue. Users post <strong>USDC</strong> as collateral to trade perps across
-          dozens of markets, generating <strong>fee income in USDC</strong> for the network.  [oai_citation:0‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)
+          dozens of markets, generating <strong>fee income in USDC</strong> for the network.
         </p>
         <p class="callout">
           Why CLOBs matter: for high-leverage, latency-sensitive perp trading, a matching engine with a live order book often provides better price discovery
-          and capital efficiency than constant-product AMMs. dYdX brings that experience on-chain.  [oai_citation:1‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)
+          and capital efficiency than constant-product AMMs. dYdX brings that experience on-chain.
         </p>
 
         <h2>Why the architecture makes sense</h2>
         <p>
           The app-chain model gives dYdX full control over block production, order-book logic and latency targets—key for derivatives. Meanwhile,
           settling collateral and fees in USDC avoids the “reflexive token emission” trap common in DeFi: traders pay in dollars, and the network
-          distributes real, dollar-denominated cash flows to validators and stakers. That aligns the system with usage and quality of execution rather
-          than inflationary subsidies.  [oai_citation:2‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)
+          distributes real, dollar-denominated cash flows to validators and stakers.
         </p>
 
         <h2>Tokenomics at a glance</h2>
@@ -65,12 +75,12 @@
           The DYDX token underpins governance and economic alignment of the chain. Two design choices stand out:
         </p>
         <ul>
-          <li><strong>Hard-capped supply:</strong> DYDX has a fixed maximum supply of <strong>1 billion</strong> tokens—no ongoing inflationary rewards.  [oai_citation:3‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
-          <li><strong>USDC fee accrual:</strong> Trading fees are earned in USDC and flow to <strong>validators and stakers</strong> who secure and govern the network.  [oai_citation:4‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
+          <li><strong>Hard-capped supply:</strong> DYDX has a fixed maximum supply of <strong>1 billion</strong> tokens—no ongoing inflationary rewards.</li>
+          <li><strong>USDC fee accrual:</strong> Trading fees are earned in USDC and flow to <strong>validators and stakers</strong> who secure and govern the network.</li>
         </ul>
         <p>
           Put together, this means value flows from protocol usage to token participants <em>without</em> minting new DYDX.
-          Stakers are compensated in a neutral unit (USDC), avoiding constant sell pressure from token-paid rewards.  [oai_citation:5‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)
+          Stakers are compensated in a neutral unit (USDC), avoiding constant sell pressure from token-paid rewards.
         </p>
 
         <h2>Supply, “minting,” and the fixed-supply effect</h2>
@@ -78,7 +88,7 @@
           DYDX’s supply is <strong>hard-capped</strong> at 1B. In practical terms, there is no “yield minting” for stakers; rewards come from USDC fees,
           not new tokens. The fixed cap acts as a brake on dilution: as long as the network grows, circulating DYDX does not need to expand to fund it.
           Over time, this can make the token’s economics feel more “equity-like”: holders and stakers capture usage-linked cash flows while the
-          outstanding share count stays bounded.  [oai_citation:6‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)
+          outstanding share count stays bounded.
         </p>
 
         <h2>How stakers get paid (and why that can lift the token)</h2>
@@ -86,44 +96,40 @@
           Because staking yield is paid in <strong>USDC</strong>, would-be participants must first <em>acquire</em> DYDX to stake and share in those dollar cash flows.
           That creates potential <strong>incremental demand</strong> for the token. Meanwhile, staked tokens are locked, which can <strong>reduce liquid float</strong>.
           If trading activity (and therefore fees) rises, USDC yields become more attractive → more staking demand → less float → potentially stronger market support
-          for DYDX. This is the core “beneficiary cycle” embedded in the design.  [oai_citation:7‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)
+          for DYDX. This is the core “beneficiary cycle” embedded in the design.
         </p>
 
         <h2>The beneficiary cycle (flywheel)</h2>
-        <p>
-          The mechanism looks like this:
-        </p>
         <ol>
-          <li><strong>More trading volume</strong> on dYdX → higher <strong>USDC fee income</strong>.  [oai_citation:8‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
-          <li>Higher USDC fee income → <strong>better staking yields</strong> for validators/stakers.  [oai_citation:9‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
+          <li><strong>More trading volume</strong> on dYdX → higher <strong>USDC fee income</strong>.</li>
+          <li>Higher USDC fee income → <strong>better staking yields</strong> for validators/stakers.</li>
           <li>Better yields → <strong>greater demand to buy and stake DYDX</strong> (to access those USDC flows) → reduced circulating float.</li>
-          <li>More staked DYDX → <strong>stronger economic/security alignment</strong> for the chain → <strong>better liquidity and execution</strong>.  [oai_citation:10‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
-          <li>Better liquidity/execution → attracts <strong>more traders</strong> → volume increases → cycle reinforces.  [oai_citation:11‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
+          <li>More staked DYDX → <strong>stronger economic/security alignment</strong> for the chain → <strong>better liquidity and execution</strong>.</li>
+          <li>Better liquidity/execution → attracts <strong>more traders</strong> → volume increases → cycle reinforces.</li>
         </ol>
 
         <h2>What makes dYdX interesting/innovative</h2>
         <ul>
-          <li><strong>CEX-grade perps, decentralized:</strong> CLOB on an app-chain aims to deliver exchange-quality execution in a
-              trustless environment—rare among DEXs.  [oai_citation:12‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
+          <li><strong>CEX-grade perps, decentralized:</strong> CLOB on an app-chain aims to deliver exchange-quality execution in a trustless environment—rare among DEXs.</li>
           <li><strong>Usage-linked, dollar cash flows:</strong> Few DeFi tokens route real USDC fees to stakers/validators with <em>no</em> token inflation,
-              aligning token demand with protocol adoption.  [oai_citation:13‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
+              aligning token demand with protocol adoption.</li>
           <li><strong>Clear economic loop:</strong> As volumes scale, rewards rise in a neutral unit (USDC), which can increase staking demand and
-              reduce sell pressure versus emission-driven models.  [oai_citation:14‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
+              reduce sell pressure versus emission-driven models.</li>
         </ul>
 
         <h2>What to watch (token-relevant KPIs)</h2>
         <ul class="kpi">
-          <li><strong>30-day trading volume &amp; fee revenue (USDC):</strong> direct driver of staking yield and value accrual.  [oai_citation:15‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
-          <li><strong>% of DYDX staked &amp; validator concentration:</strong> token lock-up, security, and decentralization health.  [oai_citation:16‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
-          <li><strong>Market breadth / new listings:</strong> more perps → broader user base → more fee generation.  [oai_citation:17‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
-          <li><strong>Latency/uptime:</strong> execution quality for CLOB trading on the app-chain.  [oai_citation:18‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)</li>
+          <li><strong>30-day trading volume &amp; fee revenue (USDC):</strong> direct driver of staking yield and value accrual.</li>
+          <li><strong>% of DYDX staked &amp; validator concentration:</strong> token lock-up, security, and decentralization health.</li>
+          <li><strong>Market breadth / new listings:</strong> more perps → broader user base → more fee generation.</li>
+          <li><strong>Latency/uptime:</strong> execution quality for CLOB trading on the app-chain.</li>
         </ul>
 
         <h2>Closing thought</h2>
         <p>
           dYdX’s tokenomics flip a familiar DeFi script. Instead of inflating a native token to subsidize activity, it routes <strong>real USDC</strong> fees to the
           actors who keep the network performant. Combined with a fixed supply and a trading engine built for derivatives,
-          the design targets a simple promise: if usage grows, <em>stakers get paid in dollars</em>—and the token’s role becomes the gateway to those cash flows.  [oai_citation:19‡DYDX_ Decentralized Perpetuals Exchange.pdf](sediment://file_00000000bc246243849b385c674aa18b)
+          the design targets a simple promise: if usage grows, <em>stakers get paid in dollars</em>—and the token’s role becomes the gateway to those cash flows.
         </p>
 
         <p style="margin-top:28px;">
