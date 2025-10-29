@@ -75,7 +75,35 @@
         
       </p>
 
+    <h3>Morpho Blue (v2): Isolated Lending markets</h3>
+      <p>
+        In this iteration, Morpho tries to surpass some of the limitations previously mentioned and build its own market layer and lending infrastructure. Under this framework, each lending market would be isolated under its own capsule
+        with its own specific parameters. 
+     </p>
+      <p>
+        This means that every Morpho Blue market defines a set of parameters for each pair of assets:
 
+        <ul>
+        <li><strong>Collateral Asset:</strong> The token users post to borrow.</li>
+        <li><strong>Loan Asset:</strong> The token users borrow.</li>
+        <li><strong>Oracle:</strong> The specific price feed used for that pair.</li>
+        <li><strong>LLTV (Liquidation Loan to Value):</strong> The maximum ratio of borrowed value to collateral value alloweds before liquidation.</li>
+        <li><strong>Liquidation module:</strong> Custom logic that defines how liquidations happen and what the penalty is.</li>  
+        </ul>
+
+        For example, the pair ETH-USDC has a different set of parameters and conditions than the pair stETH-DAI. In addition, Morpho Blue achieved its own interest rate model (Utilization curves 
+        are directly coded in each Morpho Blue contract), liquidation logic, and risk framework.
+
+        <h4>Why is Isolation Powerful</h4>
+      
+      
+      </p>
+        
+        
+
+
+        
+      
 
 
       
