@@ -37,7 +37,7 @@
         interest-rate formation, collateralization, and liquidation paths.
       </p>
       <hr style="border-color:rgba(2,6,23,0.08);margin:18px 0" />
-      <p><em>Published:  —  · 10–15 min</em></p>
+      <p><em>Estimated read time  · 12–15 min</em></p>
 
       <!-- =========================
            MORPHO
@@ -48,6 +48,37 @@
         It began as the <em>Morpho Optimizer</em>, a matching layer that sits on top of Aave/Compound, then evolved into <em>Morpho Blue</em> and
         <em>MetaMorpho (Vaults)</em> to deliver isolated-market safety with curated allocation.
       </p>
+      <p>
+        Morpho set up to solve the problem of capital inefficiency in the classic pooled lending models like Aave or Compound. In such protocols,
+        lenders earn the pool supply APY (often lower than what a matched borrower would pay), and borrowers pay the pool borrow APY (often higer 
+        than what a matched lender would accept). In this way, the pool stays liquid and the protocol treasury makes profits on interest spread. 
+        Morpho tries to solve this issue without compromising safety.
+      </p>
+
+    <h3>Morpho Optimizer (v1): Matching on top of Aave / Compound</h3>
+      <p>
+      The main idea is to leverage on Aave / Compound as the risk and settlement layer, but add a <strong>P2P engine</strong> on top. This framework results in 
+      a considerable reduction of the interest spread, solving the capital allocation inefficiency problem. In particular, if a borrower wants to pay 5% and a lender is happy 
+      recieving 3%, Morpho matches them at midpoint 4% (approximately). If a match is not available, positions sit in the pool at the usual rates, nobody could end up in a worse position than baseline.
+      </p>
+
+      <ul>
+        <li><strong>Mechanics:</strong> Users only interact with Morpho contracts.</li>
+        <li><strong>Risk:</strong> The oracles, collateral, liquidations, and leverage risks still rely on Aave / Compound architecture. Matched positions are still fully secured by the underlying protocol</li>
+      </ul>
+
+      <p>
+        This framework worked well because it meant a <strong>Pareto Improvement</strong> for every user, every user resulted in a better situation. Additionally, it was able to reduce 
+        idle liquidity in the pools, as positions shifted toward matched pairs. However, this framework found some limitations. The main one being that matching users on top of a shared pool is stil
+        constrained by pool parameters and risks, it inherited Aave / Compund. Morpho could not choose it's own LTV, the selection of assets that could be listed, the interest rate curves, and oracle system. 
+        This limited the products and services that Morpho could offer, and that lead to <strong>Morpho Blue</strong>.
+        
+      </p>
+
+
+
+
+      
 
       <h3>Vaults first: What they are and why they supply specific markets</h3>
       <p>
