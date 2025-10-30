@@ -80,9 +80,11 @@
           <li><strong>Risk:</strong> Oracles, collateral, liquidations, and leverage still rely on the underlying Aave/Compound architecture. Matched positions remain fully secured by the base protocol.</li>
         </ul>
         <p>
-          This worked because it represented a <strong>Pareto improvement</strong>, every user ended up in a better position. It also reduced idle liquidity as positions shifted toward matched pairs.
-          But matching on top of a shared pool inherits pool parameters and risks. Morpho couldn’t choose its own LTVs, asset listings, interest-rate curves, or oracle systems; and that limited product
-          design paved the way for <strong>Morpho Blue</strong>.
+          This framework worked well because it meant a <strong>Pareto Improvement</strong> for every user. Additionally, it was able to reduce 
+        idle liquidity in the pools, as positions shifted toward matched pairs. However, this framework found some limitations. The main one being that matching users on top of a shared pool is stil
+        constrained by pool parameters and risks, it inherited Aave / Compund. Morpho could not choose it's own LTV, the selection of assets that could be listed, the interest rate curves, and oracle system. 
+        This limited the products and services that Morpho could offer, and that lead to <strong>Morpho Blue</strong>.
+        
         </p>
 
         <h3>Morpho Blue (v2): Isolated lending markets</h3>
