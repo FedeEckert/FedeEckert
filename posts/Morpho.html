@@ -122,13 +122,13 @@
         </p>
 
         <h4>How MetaMorpho works</h4>
-        <ul>
-          <li><strong>Owner:</strong> sets fees, appoints curators/allocators, and manages vault parameters.</li>
-          <li><strong>Curator:</strong> defines which Morpho Blue markets the vault can use, they are the “risk brain” that adds/removes eligible pairs.</li>
-          <li><strong>Allocator:</strong> executes allocation and rebalancing across eligible markets, maximizing APY per unit of risk within the curator’s guardrails.</li>
-          <li><strong>Timelocks:</strong> critical parameter changes are delayed, giving users time to exit before exposure changes.</li>
-          <li><strong>ERC-4626 standardization:</strong> deposits mint shares that represent a pro-rata claim on the vault’s assets.</li>
-        </ul>
+         <ul>
+        <li><strong>Owner:</strong> Sets fees, appoints curators/allocators, manages vault parameters. The owner is responsible of governance of the vault.</li>
+        <li><strong>Curator:</strong> Defines which Morpho Blue markets the vault can use, adding and removing pairs as they see fit. Curators act as the "risk brain" of the vault, as users rely on them to define where the vault is allowd to deposit.</li>
+        <li><strong>Allocator:</strong> Executes the allocation and rebalancing of funds across those blue markets. Allocators are the execution engine, good allocators extract more APY per unit of risk, while keeping liquidity for exit and respecting the curator guardrails</li>
+        <li><strong>Timelocks:</strong> All critical parameter changes must wait a set period before taking effect.</li>
+        <li><strong>ERC- 4626 standarization:</strong> Deposits issue shares that represent a pro-rata claim on the vault's assets.</li>  
+      </ul>
 
         <div class="step">
           <h4>Step 1: Deposit & Share Issuance</h4>
