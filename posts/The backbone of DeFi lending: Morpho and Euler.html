@@ -133,7 +133,7 @@
         
       </p>
       <p>
-      <stong>Step 2: Allocation</stong>
+      <strong>Step 2: Allocation</strong>
         The allocator examines which eligible markets (defined by the curator) have:
         <ul>
         <li>Strond borrow demand: High utilization but healthy collateralization.</li>
@@ -144,8 +144,16 @@
       It then distributes liquidity across those markets, for example, 60% in ETH/USDC, 25% in WBTC/USDC, 15% stETH/USDC. These allocations can be adjusted dynamically, but only within the pre-approved markets.
       </p>
 
-  
+      <p>
+      <strong>Step 3: Interest Accrual</strong>
+      Borrowers in those underlying markets pay interest into the Morpho Blue contracts. Each market keeps track of the <em>Total supplied liquidity</em>, <em>Total Borrowed liquidity</em>, <em>Utilization rate</em> that drives interest-rate curve.
+      the vaults share of each market' lender income aggregates into its total holdings. As this income accumulates, the vault's share price (assets per share) increases, and that's how yield reaches depositors.
+      </p>
 
+      <p>
+      <strong>Withdrawal</strong>
+        When a user withdraws, the vauls burns their shares and return assets. If there is a high utilization (tight liquidity), the allocator has an order to unwind positions. 
+      </p>
 
       
     
