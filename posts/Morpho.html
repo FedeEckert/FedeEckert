@@ -80,9 +80,9 @@
           <li><strong>Risk:</strong> Oracles, collateral, liquidations, and leverage still rely on the underlying Aave/Compound architecture. Matched positions remain fully secured by the base protocol.</li>
         </ul>
         <p>
-          This worked because it represented a <strong>Pareto improvement</strong>—every user ended up in a better position. It also reduced idle liquidity as positions shifted toward matched pairs.
-          But matching on top of a shared pool inherits pool parameters and risks. Morpho couldn’t choose its own LTVs, asset listings, interest-rate curves, or oracle systems. That limited product
-          design—paving the way for <strong>Morpho Blue</strong>.
+          This worked because it represented a <strong>Pareto improvement</strong>, every user ended up in a better position. It also reduced idle liquidity as positions shifted toward matched pairs.
+          But matching on top of a shared pool inherits pool parameters and risks. Morpho couldn’t choose its own LTVs, asset listings, interest-rate curves, or oracle systems; and that limited product
+          design paved the way for <strong>Morpho Blue</strong>.
         </p>
 
         <h3>Morpho Blue (v2): Isolated lending markets</h3>
@@ -105,7 +105,7 @@
         <h4>The power and the limits of isolation</h4>
         <p>
           By isolating each pair into its own pool, Morpho diversifies risk: a risky asset in one market does not affect others. Borrowers gain access
-          to new forms of collateral as long as someone deploys a market for it—no global listing vote required. Lenders can choose their preferred risk,
+          to new forms of collateral as long as someone deploys a market for it, there is no global listing vote required. Lenders can choose their preferred risk,
           ranging from exotic pairs to established ones. In that sense, Morpho Blue democratized access to credit and yield across a wide range of assets.
         </p>
         <p>
@@ -117,14 +117,14 @@
         <h3>MetaMorpho (Vaults): Vaults that allocate liquidity across Blue markets</h3>
         <p>
           MetaMorpho abstracts risk management and allocation away from the end user. Previously, depositors had to pick markets, study oracles and LLTVs,
-          and rebalance manually. MetaMorpho introduced <strong>vaults</strong> that perform these tasks transparently and permissionlessly—think of them
+          and rebalance manually. MetaMorpho introduced <strong>vaults</strong> that perform these tasks transparently and permissionlessly, think of them
           as portfolio managers for Morpho Blue.
         </p>
 
         <h4>How MetaMorpho works</h4>
         <ul>
           <li><strong>Owner:</strong> sets fees, appoints curators/allocators, and manages vault parameters.</li>
-          <li><strong>Curator:</strong> defines which Morpho Blue markets the vault can use—the “risk brain” that adds/removes eligible pairs.</li>
+          <li><strong>Curator:</strong> defines which Morpho Blue markets the vault can use, they are the “risk brain” that adds/removes eligible pairs.</li>
           <li><strong>Allocator:</strong> executes allocation and rebalancing across eligible markets, maximizing APY per unit of risk within the curator’s guardrails.</li>
           <li><strong>Timelocks:</strong> critical parameter changes are delayed, giving users time to exit before exposure changes.</li>
           <li><strong>ERC-4626 standardization:</strong> deposits mint shares that represent a pro-rata claim on the vault’s assets.</li>
