@@ -87,16 +87,16 @@
 
         <h3>Morpho Blue (v2): Isolated lending markets</h3>
         <p>
-          Morpho Blue builds its own market layer and lending infrastructure. Each market is isolated in its own capsule with independent parameters.
-          Every Morpho Blue market defines:
+          Morpho Blue builds its own market layer and lending infrastructure in a way that each market is isolated in its own capsule with independent parameters.
+          Every pair or Morpho Blue market defines:
         </p>
-         <ul>
-        <li><strong>Owner:</strong> Sets fees, appoints curators/allocators, manages vault parameters. The owner is responsible of governance of the vault.</li>
-        <li><strong>Curator:</strong> Defines which Morpho Blue markets the vault can use, adding and removing pairs as they see fit. Curators act as the "risk brain" of the vault, as users rely on them to define where the vault is allowd to deposit.</li>
-        <li><strong>Allocator:</strong> Executes the allocation and rebalancing of funds across those blue markets. Allocators are the execution engine, good allocators extract more APY per unit of risk, while keeping liquidity for exit and respecting the curator guardrails</li>
-        <li><strong>Timelocks:</strong> All critical parameter changes must wait a set period before taking effect.</li>
-        <li><strong>ERC- 4626 standarization:</strong> Deposits issue shares that represent a pro-rata claim on the vault's assets.</li>  
-      </ul>
+        <ul>
+        <li><strong>Collateral Asset:</strong> The token users post to borrow.</li>
+        <li><strong>Loan Asset:</strong> The token users borrow.</li>
+        <li><strong>Oracle:</strong> The specific price feed used for that pair.</li>
+        <li><strong>LLTV (Liquidation Loan to Value):</strong> The maximum ratio of borrowed value to collateral value alloweds before liquidation.</li>
+        <li><strong>Liquidation module:</strong> Custom logic that defines how liquidations happen and what the penalty is.</li>  
+        </ul>
         <p>
           For example, the ETH/USDC pair can have different parameters than stETH/DAI. Morpho Blue also implements its own interest-rate model
           (utilization curves are coded per market), liquidation logic, and risk framework.
