@@ -103,13 +103,52 @@
         </p>
         <p>
         But this framework does not come without its limitations. Morpho Blue provided, in a sense, too much freedom, what can overwhelm the users. As 
-        dozens of isolated markets are offered lender are required to research each market parameters, conditions in order to manage their funds. In this line, users are required to behave like porfolio managers, but most users do not want to 
+        dozens of isolated markets are offered, lenders are required to research each blue market parameters and conditions in order to manage their funds. In this line, users are required to behave like porfolio managers, but most users do not want to 
         run a small credit fund every time they lend stablecoins. This friction explained the development of the next iteration: <strong>MetaMorpho</strong>.
         </p>
 
       <h3>MetaMorpho (Vaults): Vaults that allocate liquidity across Blue markets</h3>
-      
+      <p>
+      The main idea behind the creation of MetaMorpho is to abstract risk management and allocation away from the end user. Before, the user needed to pick markets, study oracles and LLTVs, and allocate and rebalance the portfolio manually. MetaMorpho introduced the concept of <strong>Vaults</strong>, that does all fund management activities on the user's behalf in a transparent,
+      permisionless way. We may undertsand this Vaults as a portfolio manager for Morpho Blue. 
+      </p>
+      <h4>How MetaMorpho works</h4>
+      <p>
+      MetaMorpho vaults has three main entities that define them and a few important properties:
+        
+      <ul>
+        <li><strong>Owner:</strong> Sets fees, appoints curators/allocators, manages vault parameters. The owner is responsible of governance of the vault.</li>
+        <li><strong>Curator:</strong> Defines which Morpho Blue markets the vault can use, adding and removing pairs as they see fit. Curators act as the "risk brain" of the vault, as users rely on them to define where the vault is allowd to deposit.</li>
+        <li><strong>Allocator:</strong> Executes the allocation and rebalancing of funds across those blue markets. Allocators are the execution engine, good allocators extract more APY per unit of risk, while keeping liquidity for exit and respecting the curator guardrails</li>
+        <li><strong>Timelocks:</strong> All critical parameter changes must wait a set period before taking effect.</li>
+        <li><strong>ERC- 4626 standarization:</strong> Deposits issue shares that represent a pro-rata claim on the vault's assets.</li>  
+      </ul>
 
+      Taking these roles into account, the process would look like this:
+      </p>
+
+      <p>
+        <strong>Step 1: Deposit & Shere issuance</strong>
+        A lender deposits an asset, say USDC, into a MetaMorpho vault. The vault mints <em>shares</em> in return (Vault Shares = f(deposit ammount / total assets). These shares represent the lendder's claim to the vault's total holdings across all its Morpho Blue markets.
+        
+      </p>
+      <p>
+      <stong>Step 2: Allocation</stong>
+        The allocator examines which eligible markets (defined by the curator) have:
+        <ul>
+        <li>Strond borrow demand: High utilization but healthy collateralization.</li>
+        <li>Solid oracle and liquidation infrastructure.</li>
+        <li>Sustainable interest rate spreads</li>
+        </ul>
+
+      It then distributes liquidity across those markets, for example, 60% in ETH/USDC, 25% in WBTC/USDC, 15% stETH/USDC. These allocations can be adjusted dynamically, but only within the pre-approved markets.
+      </p>
+
+  
+
+
+      
+    
 
         
       
