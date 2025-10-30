@@ -90,13 +90,13 @@
           Morpho Blue builds its own market layer and lending infrastructure. Each market is isolated in its own capsule with independent parameters.
           Every Morpho Blue market defines:
         </p>
-        <ul>
-          <li><strong>Collateral asset:</strong> the token users post to borrow.</li>
-          <li><strong>Loan asset:</strong> the token users borrow.</li>
-          <li><strong>Oracle:</strong> the specific price feed used for that pair.</li>
-          <li><strong>LLTV (Liquidation Loan-to-Value):</strong> the maximum borrowed-value-to-collateral-value ratio allowed before liquidation.</li>
-          <li><strong>Liquidation module:</strong> custom logic defining how liquidations happen and what the penalty is.</li>
-        </ul>
+         <ul>
+        <li><strong>Owner:</strong> Sets fees, appoints curators/allocators, manages vault parameters. The owner is responsible of governance of the vault.</li>
+        <li><strong>Curator:</strong> Defines which Morpho Blue markets the vault can use, adding and removing pairs as they see fit. Curators act as the "risk brain" of the vault, as users rely on them to define where the vault is allowd to deposit.</li>
+        <li><strong>Allocator:</strong> Executes the allocation and rebalancing of funds across those blue markets. Allocators are the execution engine, good allocators extract more APY per unit of risk, while keeping liquidity for exit and respecting the curator guardrails</li>
+        <li><strong>Timelocks:</strong> All critical parameter changes must wait a set period before taking effect.</li>
+        <li><strong>ERC- 4626 standarization:</strong> Deposits issue shares that represent a pro-rata claim on the vault's assets.</li>  
+      </ul>
         <p>
           For example, the ETH/USDC pair can have different parameters than stETH/DAI. Morpho Blue also implements its own interest-rate model
           (utilization curves are coded per market), liquidation logic, and risk framework.
@@ -157,9 +157,9 @@
           <h4>Step 3: Interest Accrual</h4>
           <p>
             Borrowers in the underlying markets pay interest into the Morpho Blue contracts. Each market tracks
-            <em>total supplied liquidity</em>, <em>total borrowed liquidity</em>, and <em>utilization rate</em>—which together determine its interest-rate curve.
+            <em>total supplied liquidity</em>, <em>total borrowed liquidity</em>, and <em>utilization rate</em>, which together determine its interest-rate curve.
             The vault’s share of each market’s lender income aggregates into total holdings. As income accrues, the vault’s share price (assets per share)
-            increases—that’s how yield reaches depositors.
+            increases, and that’s how yield reaches depositors.
           </p>
         </div>
 
@@ -182,9 +182,9 @@
         <p>
           Today, Morpho functions not just as a niche optimizer but as a full-stack lending infrastructure. The original Optimizer products are deprecated
           (front-end support ending in September 2025). Morpho Blue sits at the core of this stack; the protocol supports hundreds of isolated markets, and
-          MetaMorpho vaults aggregate liquidity and simplify access for lenders—deploying capital across curated risk perimeters while leveraging Blue’s modular
+          MetaMorpho vaults aggregate liquidity and simplify access for lenders, deploying capital across curated risk perimeters while leveraging Blue’s modular
           architecture. The result: markets where lenders earn better rates, borrowers access bespoke collateral/borrow pairs, and risks are compartmentalized
-          per-market. In short, Morpho delivers both accessibility and infrastructure-grade flexibility—placing it among the most relevant protocols powering
+          per-market. In short, Morpho delivers both accessibility and infrastructure-grade flexibility, placing it among the most relevant protocols powering
           on-chain credit markets.
         </p>
 
