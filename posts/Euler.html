@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Euler: Modular Credit Infrastructure for DeFi — Technical Deep Dive</title>
+  <meta name="description" content="A thorough explainer of Euler V2: the motivation, how EVK/EVC work, interest-rate models, and how it differs from Morpho—plus current usage stats." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    .mono{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
+    .callout{border-left:3px solid rgba(2,6,23,0.2);padding:12px 14px;background:rgba(2,6,23,0.03);border-radius:6px}
+    .kpi li{margin-bottom:6px}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../index.html"><span>Federico Eckert</span></a>
+    <nav class="nav-links">
+      <a href="../index.html#research">Research</a>
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <article class="section">
+    <div class="container">
+      <p><a class="btn btn-outline" href="../index.html#research">← Back to research</a></p>
+
+      <h1>Euler: Modular Credit Infrastructure for DeFi</h1>
+      <p class="section-lead">
+        Euler V2 turns lending into a modular, permissionless system of isolated credit vaults.
+        Below I explain the motivation, how it works (EVK + EVC), how interest rates are modeled, why it differs from Morpho,
+        and why it matters—backed by live usage metrics.
+      </p>
+      <hr style="border-color:rgba(2,6,23,0.08);margin:18px 0" />
+      <p><em>Published: 31 Oct 2025 · 10–12 min</em></p>
+
+      <h2>Motivation — the problem Euler set out to solve</h2>
+      <p>
+        Traditional pooled lenders concentrate many assets into one risk surface. That creates three issues:
+        <strong>(1)</strong> <em>contagion</em>—a failure in one asset can threaten the whole pool;
+        <strong>(2)</strong> <em>listing rigidity</em>—new or long-tail assets struggle to get markets; and
+        <strong>(3)</strong> <em>one-size-fits-all rate curves</em> that misprice risk. Euler’s answer in V2 is a toolkit to
+        launch <strong>isolated</strong>, <strong>customizable</strong> vaults for virtually any ERC-20, along with infrastructure to connect them safely.  [oai_citation:0‡docs.euler.finance](https://docs.euler.finance/introduction/?utm_source=chatgpt.com)
+      </p>
+
+      <h2>How Euler works — EVK vaults and the EVC “credit graph”</h2>
+      <h3>EVK: Euler Vault Kit (vaults as isolated lending pools)</h3>
+      <p>
+        The <strong>Euler Vault Kit (EVK)</strong> lets anyone deploy a lending vault that follows ERC-4626 share accounting but adds borrowing.
+        Conceptually, there are two kinds of vaults: a <strong>liability vault</strong> (where lenders deposit the asset that can be borrowed)
+        and <strong>collateral vaults</strong> (where users park assets that can be recognized as collateral by specific liability vaults).
+        Crucially, each liability vault picks which collateral vaults it accepts—so risk is isolated per vault.  [oai_citation:1‡docs.euler.finance](https://docs.euler.finance/developers/evk/?utm_source=chatgpt.com)
+      </p>
+
+      <h3>EVC: Ethereum Vault Connector (orchestrating multi-vault positions)</h3>
+      <p>
+        The <strong>EVC</strong> is the router/entry point that stitches vaults together: it enables batching of actions, sub-accounts,
+        and cross-vault checks, so a user can (in one call) deposit collateral in vault X and borrow from vault Y with health checks at the end.
+        This is what turns a set of isolated vaults into a flexible <em>credit graph</em>.  [oai_citation:2‡docs.euler.finance](https://docs.euler.finance/concepts/core/evc/?utm_source=chatgpt.com)
+      </p>
+      <p class="callout">
+        Security note: both EVK and EVC have undergone third-party audits (OpenZeppelin, ChainSecurity), and Euler runs a large bug bounty program
+        for core components.  [oai_citation:3‡openzeppelin.com](https://www.openzeppelin.com/news/euler-vault-kit-evk-audit?utm_source=chatgpt.com)
+      </p>
+
+      <h2>Interest-rate models — how pricing adapts to utilisation</h2>
+      <p>
+        Euler V2 supports multiple <strong>Interest Rate Models (IRM)</strong> at the vault level. A common design is a
+        <strong>linear-kink</strong> curve (gradual increase until a utilisation threshold, then a steeper slope), but other reactive models are available.
+        The key idea is that <em>each vault</em> can select a curve appropriate to its asset/liquidity profile, rather than sharing one global model.  [oai_citation:4‡docs.euler.finance](https://docs.euler.finance/concepts/financial/interest-rates?utm_source=chatgpt.com)
+      </p>
+      <p>
+        The intuition is standard: let <span class="mono">U = borrowed / supplied</span>. As <span class="mono">U</span> rises, borrow rates increase to attract supply
+        and temper demand; as <span class="mono">U</span> falls, rates ease. Where allowed, a smooth model of the form
+        <span class="mono">r<sub>b</sub>(U) = a + b·Uⁿ</span> can be configured to avoid hard shocks; for stable pairs one might use a gentler slope (n≈1),
+        while volatile assets can use steeper curves. (Euler’s docs enumerate the built-in IRMs and the linear-kink baseline.)  [oai_citation:5‡docs.euler.finance](https://docs.euler.finance/concepts/financial/interest-rates?utm_source=chatgpt.com)
+      </p>
+
+      <h2>User flows — lender and borrower, step by step</h2>
+      <h3>Lender (liability vault)</h3>
+      <ol>
+        <li><strong>Deposit</strong> the asset into a liability vault → receive ERC-4626 shares.</li>
+        <li><strong>Accrue</strong> yield as borrowers draw and pay interest; assets-per-share increases.</li>
+        <li><strong>Withdraw</strong> when liquidity allows (utilisation affects exit smoothness).</li>
+      </ol>
+      <p>
+        Many integrators route through EVC for batching and portfolio operations (e.g., deposit in vault A, simulate, then move).  [oai_citation:6‡docs.euler.finance](https://docs.euler.finance/developers/evk/interacting-with-vaults?utm_source=chatgpt.com)
+      </p>
+
+      <h3>Borrower (via EVC)</h3>
+      <ol>
+        <li><strong>Post collateral</strong> into one or more collateral vaults.</li>
+        <li><strong>Borrow</strong> from a liability vault that <em>whitelists</em> those collateral vaults.</li>
+        <li><strong>Maintain health</strong>; liquidations are handled per-vault (oracle, LTV, penalty) if the position falls below thresholds.</li>
+      </ol>
+      <p>
+        Because each liability vault decides its accepted collateral map, risk is constrained <em>by design</em>.  [oai_citation:7‡docs.euler.finance](https://docs.euler.finance/developers/evk/?utm_source=chatgpt.com)
+      </p>
+
+      <h2>How Euler differs from Morpho</h2>
+      <ul>
+        <li><strong>Market creation vs. curation:</strong> Euler’s EVK/EVC enables <em>permissionless</em> vault creation and arbitrary credit graphs; Morpho’s current stack emphasizes <em>curated</em> market lists and allocator-managed vaults (MetaMorpho) on top of its isolated Blue markets.</li>
+        <li><strong>Where the risk box lives:</strong> Euler isolates risk at the <em>vault</em> and allows each liability vault to define its accepted collateral vaults; Morpho isolates at the <em>market</em> (pair) and then aggregates via vaults that whitelist markets and allocate across them.</li>
+        <li><strong>Rate modeling emphasis:</strong> Euler surfaces multiple IRMs per vault (including linear-kink and reactive); Morpho historically focused on P2P optimisation (Optimizer) and now on vault-level allocation across markets.  [oai_citation:8‡docs.euler.finance](https://docs.euler.finance/concepts/financial/interest-rates?utm_source=chatgpt.com)</li>
+      </ul>
+
+      <h2>Risks and what to monitor</h2>
+      <ul class="kpi">
+        <li><strong>Oracle & liquidation efficacy</strong> (per vault): mispriced oracles or thin auctions can create bad debt; check the chosen oracle and penalty mech.  [oai_citation:9‡docs.euler.finance](https://docs.euler.finance/concepts/core/vaults/?utm_source=chatgpt.com)</li>
+        <li><strong>Utilisation & exit liquidity:</strong> high U can delay withdrawals; track vault-level U and IRM steepness.  [oai_citation:10‡docs.euler.finance](https://docs.euler.finance/concepts/financial/interest-rates?utm_source=chatgpt.com)</li>
+        <li><strong>Collateral map changes:</strong> liability vaults can update accepted collateral; watch governance and audit trails (plus bug bounty scope).  [oai_citation:11‡Cantina](https://cantina.xyz/bounties/4d285eee-602e-440a-845e-25e155cec26a?utm_source=chatgpt.com)</li>
+      </ul>
+
+      <h2>Closing — why Euler matters (with current stats)</h2>
+      <p>
+        As of <strong>31 Oct 2025</strong>, <em>Euler V2</em> is securing roughly <strong>$3.26&nbsp;billion TVL</strong> with <strong>$1.63&nbsp;billion borrowed</strong>,
+        and is generating an annualized fee run-rate around <strong>$137&nbsp;million</strong> according to DefiLlama’s protocol dashboard. These figures underscore not only scale but also sustained usage across chains and vaults.  [oai_citation:12‡defillama.com](https://defillama.com/protocol/euler-v2)
+        Under the hood, the combination of <strong>EVK</strong> (to spin up isolated, configurable vaults) and the <strong>EVC</strong> (to compose them safely with batching and account controls)
+        makes Euler less a single app and more a <em>credit infrastructure layer</em> for DeFi. For treasuries, DAOs, and funds, that means tailored interest-rate models, asset-specific risk boxes,
+        and the ability to construct bespoke borrowing paths—without inheriting pool-wide contagion.  [oai_citation:13‡docs.euler.finance](https://docs.euler.finance/developers/evk/?utm_source=chatgpt.com)
+      </p>
+
+      <p style="margin-top:28px;"><a class="btn btn-outline" href="../index.html#research">← Back to research</a></p>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="container"><small>© <span id="year"></span> Federico Eckert</small></div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
