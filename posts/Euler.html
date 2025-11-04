@@ -51,18 +51,35 @@
           and why it matters—backed by live usage metrics.
         </p>
         <hr style="border-color:rgba(2,6,23,0.08);margin:18px 0" />
-        <p><em>Published: 31 Oct 2025 · 10–12 min</em></p>
+        <p><em>Estimated read time · 10–12 min</em></p>
 
-        <h2>Motivation — the problem Euler set out to solve</h2>
+        <h2>The problem Euler set out to solve</h2>
         <p>
-          Traditional pooled lenders concentrate many assets into one risk surface. That creates three issues:
-          <strong>(1)</strong> <em>contagion</em>—a failure in one asset can threaten the whole pool;
-          <strong>(2)</strong> <em>listing rigidity</em>—new or long-tail assets struggle to get markets; and
-          <strong>(3)</strong> <em>one-size-fits-all rate curves</em> that misprice risk. Euler’s answer in V2 is a toolkit to
-          launch <strong>isolated</strong>, <strong>customizable</strong> vaults for virtually any ERC-20, along with infrastructure to connect them safely.
+          DeFi lending protocols like Aave or Compound pioneered in open borrowing and lending. They pooled deposits from lenders and issued loans to borrowers within the same shared liquidity pool.
+          While this design is very innovative and revolutionary, it is also quite limited:
+
+          <ol>
+          <li><strong>Shared Risk:</strong> All assets share a common pool of liquidity, so if one risky asset collapses, it can trigger liquidations or bad debt across the entire ecosystem. Also, one single exploit or oracle failure can edanger every depositor.</li>
+          <li><strong>Listing rigidity:</strong> In order to protect the pool, governance only approves the listing of of the most liquid, blue-chip assets (stablecoins, ETH, wBTC). As a result, innovative or long tail tokens are excluded.</li>
+          <li><strong>Uniform parameters</strong> Global interest rate models, liquidation penalties, and LTV ratios apply to all markets. While this works, it misprices risk.</li>
+        </ol>
+          
+          Inspired in this, <strong>Euler</strong> was built. The main goal was to allow anyone to create a lending market safely, without relying on global governance and without endangering others. Euler reimagines a lending protocol not as one giant pool, but as a <em>network of vauls</em>, 
+          each with its own logic, parameters, and risk perimeter. 
         </p>
 
-        <h2>How Euler works — EVK vaults and the EVC “credit graph”</h2>
+        <h2>Architecture: How Euler works</h2>
+
+        <h3>EVK (Euler Vault Kit)</h3>
+        
+        <p>
+        The EVK is the smart contract toolkit that developers use to create vaults. A vault is a self contained ERC-4626 contract that can handle deposits, borrowing and interest accrual. 
+
+
+          
+        </p>
+
+        
         <h3>EVK: Euler Vault Kit (vaults as isolated lending pools)</h3>
         <p>
           The <strong>Euler Vault Kit (EVK)</strong> lets anyone deploy a lending vault that follows ERC-4626 share accounting but adds borrowing.
