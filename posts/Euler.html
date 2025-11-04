@@ -110,16 +110,23 @@
       <h3>Borrower Perspective</h3>
 
         <div>
-        <ol>
-        <li><strong>(1)</strong> You deposit ETH into the <em>ETH collateral vault</em></li>
-        <li><strong>(2)</strong> You borrow USDC from a USDC liability vault that whitelists the ETH collateral vault.</li>
-        <li><strong>(3)</strong> Your borrowing capacity is defined by the vault's LLTV: Borrow limit = Collateral value * LLTV</li>
-        <li><strong>(4)</strong> You can withdraw anytime if there is enough liquidity; when utilization is high, withdrawals may take time</li>
-        </ol>
-
-
-          
-        </div>
+  <ol>
+    <li><strong>(1)</strong> You deposit <em>ETH</em> into the <em>ETH collateral vault</em>.</li>
+    <li><strong>(2)</strong> You borrow <em>USDC</em> from a <em>USDC liability vault</em> that whitelists the ETH collateral vault.</li>
+    <li><strong>(3)</strong> Your borrowing capacity is defined by the vault’s LLTV:<br>
+      <span style="font-family:'JetBrains Mono',monospace; background:rgba(2,6,23,0.04); padding:4px 6px; border-radius:4px; display:inline-block; margin-top:4px;">
+        Borrow&nbsp;limit&nbsp;=&nbsp;Collateral&nbsp;value&nbsp;&times;&nbsp;LLTV
+      </span>
+    </li>
+    <li><strong>(4)</strong> Your health factor is:<br>
+      <span style="font-family:'JetBrains Mono',monospace; background:rgba(2,6,23,0.04); padding:4px 6px; border-radius:4px; display:inline-block; margin-top:4px;">
+        Health&nbsp;=&nbsp;(Collateral&nbsp;value&nbsp;&times;&nbsp;LLTV)&nbsp;/&nbsp;Borrowed&nbsp;value
+      </span><br>
+      If <strong>Health&nbsp;&lt;&nbsp;1</strong>, liquidation can occur.
+    </li>
+    <li><strong>(5)</strong> Liquidators repay your debt and seize your collateral at a discount.</li>
+  </ol>
+</div>
 
 
 
