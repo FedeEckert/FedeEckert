@@ -62,7 +62,7 @@
           <li><strong>Shared Risk:</strong> All assets share a common pool of liquidity, so if one risky asset collapses, it can trigger liquidations or bad debt across the entire ecosystem. Also, one single exploit or oracle failure can edanger every depositor.</li>
           <li><strong>Listing rigidity:</strong> In order to protect the pool, governance only approves the listing of of the most liquid, blue-chip assets (stablecoins, ETH, wBTC). As a result, innovative or long tail tokens are excluded.</li>
           <li><strong>Uniform parameters</strong> Global interest rate models, liquidation penalties, and LTV ratios apply to all markets. While this works, it misprices risk.</li>
-        </ol>
+          </ol>
           
           Inspired in this, <strong>Euler</strong> was built. The main goal was to allow anyone to create a lending market safely, without relying on global governance and without endangering others. Euler reimagines a lending protocol not as one giant pool, but as a <em>network of vauls</em>, 
           each with its own logic, parameters, and risk perimeter. 
@@ -73,12 +73,61 @@
         <h3>EVK (Euler Vault Kit)</h3>
         
         <p>
-        The EVK is the smart contract toolkit that developers use to create vaults. A vault is a self contained ERC-4626 contract that can handle deposits, borrowing and interest accrual. 
+        The EVK is the smart contract toolkit that developers use to create vaults. A vault is a self contained ERC-4626 contract that can handle deposits, borrowing and interest accrual. Each Vault defines:
+          
+        <ol>
+          <li>The asset it lends and holds</li>
+          <li>The oracle it uses for price data</li>
+          <li>The interest rate model</li>
+          <li>The liquidation logic and penalty</li>
+          <li>The LTV or LLTV ratio</li>
+          <li><strong>The collateral vaults it accepts</strong></li>
+          </ol>
+
+        This is a crucial distinction of Euler's design, as not all assets that can be deposited into vaults as liquidity are then accepted as collateral for loans. Each <em>liability vault</em> (the one holding the lendable asset) decides which <em>collateral vaults</em> are accepted to back up loans.
+        Each liability vault's whitelist of acceptable collateral vaults is called its <em>collateral map</em>. In this manner, Euler is able to allow the creation of any vault without restrictions while keeping risk contained into each vault, and ss a result, you get mani "mini markets", each isolated and parametrized individually.
+        </p>
+        <h3>EVC (Ethereum Vault Connector)</h3>
+
+        <p>
+        Even though having many vaults is a powerful concepts, it is not of much use for users unless there is a way to connect them all. That is the job of the EVC, it acts as the orchestation layer that enables composability without losing isolation. The EVC allows to batch actions across vaults in one transaction (deposit collatera, borrow, repay, withdraw), 
+        use subaccounts and manage multiple position automatically, and also enforce "end of all transactions" across all vaults you interacted with. So as vaults are isolated at a smart contract level, the EVC makes the system behave as one inegrated network for users, what Euler calls the <strong>credit graph</strong>.
+        </p>
+
+
+        <h2>How Lending and Borrowing work</h2>
+
+        <h3>Lender Perspective</h3>
+        <div>
+         <ol>
+         <li><strong>(1)</strong> You deposit USDC into the <em>USDC liability vault</em></li>
+         <li><strong>(2)</strong> Borrowers draw USDC and pay interest over time.</li>
+         <li><strong>(3)</strong> The vault's internal "total asets" grow, so your shares increase in value <strong>-This is the Yield-</strong>.</li>
+         <li><strong>(4)</strong> You can withdraw anytime if there is enough liquidity; when utilization is high, withdrawals may take time</li>
+         </ol>
+      </div>
+        
+      <h3>Borrower Perspective</h3>
+
+        <div>
+        <ol>
+        <li><strong>(1)</strong> You deposit ETH into the <em>ETH collateral vault</em></li>
+        <li><strong>(2)</strong> You borrow USDC from a USDC liability vault that whitelists the ETH collateral vault.</li>
+        <li><strong>(3)</strong> Your borrowing capacity is defined by the vault's LLTV: Borrow limit = Collateral value * LLTV</li>
+        <li><strong>(4)</strong> You can withdraw anytime if there is enough liquidity; when utilization is high, withdrawals may take time</li>
+        </ol>
 
 
           
-        </p>
+        </div>
 
+
+
+
+
+
+
+        
         
         <h3>EVK: Euler Vault Kit (vaults as isolated lending pools)</h3>
         <p>
