@@ -1,44 +1,29 @@
 <!doctype html>
 <html lang="en">
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Morpho deep dive: Making on-chain credit capital efficient — Federico Eckert</title>
-  <meta name="description" content="A technical explainer of Morpho and Euler: vault mechanics, market design, and how on-chain lending works end-to-end." />
-
-  <!-- Fonts & styles -->
+  <title>Morpho Deep Dive: Making On-Chain Credit Capital Efficient — Federico Eckert</title>
+  <meta name="description" content="A technical deep dive into Morpho’s architecture: how vaults, interest-rate curves, and risk isolation shape the foundation of decentralized credit markets." />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=5" />
-
-  <!-- Favicon (mate logo) -->
-  <link rel="icon" href="/assets/Logo1.png" type="image/png" />
-
-  <!-- Local tweaks for figures & steps -->
-  <style>
-    figure { max-width: 720px; margin: 22px auto; text-align: center; }
-    figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(2,6,23,0.08); }
-    figure figcaption { font-size: 0.92rem; color: rgba(2,6,23,0.72); margin-top: 8px; }
-    .callout { border-left: 3px solid rgba(2,6,23,0.2); padding: 12px 14px; background: rgba(2,6,23,0.03); border-radius: 6px; }
-    code, .mono { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; }
-    .kpi li { margin-bottom: 6px; }
-    .step { margin-bottom: 20px; }
-    .step h4 { margin: 0 0 8px; }
-  </style>
+  <link rel="stylesheet" href="../styles.css?v=5" />
+  <link rel="icon" href="../assets/Logo1.png" type="image/png" />
 </head>
-
 <body class="post-page">
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="/index.html">
-        <img src="/assets/Logo1.png" alt="Mate logo" class="logo" />
+      <a class="brand" href="../index.html">
+        <img src="../assets/Logo1.png" alt="Mate logo" class="logo" />
         <span>Federico Eckert</span>
       </a>
       <nav class="nav-links">
-        <a href="/index.html#contact">Contact</a>
+        <a href="../index.html#contact">Contact</a>
       </nav>
     </div>
   </header>
-
+  
   <main>
     <article class="section">
       <div class="container">
