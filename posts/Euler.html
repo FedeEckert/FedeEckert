@@ -3,36 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Euler: Modular Credit Infrastructure for DeFi — Technical Deep Dive</title>
+  <title>Deep Dive into Euler: A Modular Credit Infrastructure for DeFi —  Federico Eckert</title>
   <meta name="description" content="A thorough explainer of Euler V2: the motivation, how EVK/EVC work, interest-rate models, and how it differs from Morpho—plus current usage stats." />
 
-  <!-- Fonts & global styles -->
+  <!-- Fonts & styles -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css" />
 
-  <!-- Favicon (mate) desde la raíz del sitio -->
-  <link rel="icon" href="/assets/Logo1.png" type="image/png" />
-  <link rel="shortcut icon" href="/assets/Logo1.png" type="image/png" />
-  <link rel="apple-touch-icon" href="/assets/Logo1.png" />
+  <!-- Favicon (logo mate) -->
+  <link rel="icon" href="../assets/Logo1.png" type="image/png" />
 
-  <!-- Local tweaks -->
+  <!-- Local tweaks for figures -->
   <style>
-    .mono{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
-    .callout{border-left:3px solid rgba(2,6,23,0.2);padding:12px 14px;background:rgba(2,6,23,0.03);border-radius:6px}
-    .kpi li{margin-bottom:6px}
-    /* Figuras coherentes con el resto del site */
     figure{max-width:720px;margin:22px auto;text-align:center}
     figure img{width:100%;height:auto;border-radius:8px;border:1px solid rgba(2,6,23,0.08)}
     figure figcaption{font-size:.92rem;color:rgba(2,6,23,0.72);margin-top:8px}
   </style>
 </head>
 
-<!-- Fondo plano para posts -->
+<!-- Fondo plano sin radiales -->
 <body class="post-page">
   <header class="site-header">
     <div class="container nav">
       <a class="brand" href="../index.html">
-        <img src="/assets/Logo1.png" alt="" class="logo" />
+        <img src="../assets/Logo1.png" alt="" class="logo" />
         <span>Federico Eckert</span>
       </a>
       <nav class="nav-links">
@@ -41,6 +35,10 @@
     </div>
   </header>
 
+
+
+
+  
   <main>
     <article class="section">
       <div class="container">
