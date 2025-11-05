@@ -127,8 +127,54 @@
     <li><strong>(5)</strong> Liquidators repay your debt and seize your collateral at a discount.</li>
   </ol>
 </div>
+        <p>
+        This is the same logic that is used in lending protocols like Aave or Compound, but in Euler it is isolated per vault, not shared globally.
+          
+        </p>
 
+        <h3>The interest rate model</h3>
+        <p>
+        Most protocols (Aave, Compound, Morpho Blue) use a two-segment kink model, where below certain kink the interest rate responds smoothly to changes in utilization. But if utilization reaches or surpases a certain kink, the interest rate responds sharply in order to prevent liquidity exhaustion. Euler 
+        insight is that different assets need different shapes of rate responses. 
+        </p>
 
+        <h4>Euler's smooth power curve</h4>
+        
+<p>
+  Euler generalizes the relationship between utilization and rates with:
+</p>
+
+<p style="font-family:'JetBrains Mono',monospace; background:rgba(2,6,23,0.04); padding:6px 8px; border-radius:4px; display:inline-block;">
+  r<sub>b</sub>(U) = a + b &middot; U<sup>k</sup>
+</p>
+
+<p>where:</p>
+<ul>
+  <li><strong>U</strong> = Borrowed&nbsp;/&nbsp;Supplied</li>
+  <li><strong>r<sub>b</sub></strong> = borrow&nbsp;APR</li>
+  <li><strong>a</strong> = base&nbsp;rate&nbsp;(minimum&nbsp;APR)</li>
+  <li><strong>b</strong> = slope&nbsp;factor&nbsp;(how&nbsp;aggressively&nbsp;rates&nbsp;rise)</li>
+  <li><strong>k</strong> = curve&nbsp;exponent&nbsp;(controls&nbsp;convexity)</li>
+</ul>
+
+<p><strong>How it behaves:</strong></p>
+<ul>
+  <li>At low utilization (U small):&nbsp;
+    <span style="font-family:'JetBrains Mono',monospace;">r<sub>b</sub> &asymp; a</span>
+  </li>
+  <li>As utilization increases, rates rise smoothly (no abrupt “kink”).</li>
+  <li><strong>k</strong> controls steepness:
+    <ul>
+      <li><span style="font-family:'JetBrains Mono',monospace;">k &asymp; 1</span> → almost linear, gentle — ideal for stablecoin markets.</li>
+      <li><span style="font-family:'JetBrains Mono',monospace;">k &gt; 2</span> → convex, sharply increasing — ideal for volatile or thin markets.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>
+  Because each vault defines its own <em>Interest Rate Model</em> (IRM),
+  every market can price liquidity risk independently — the mathematical flexibility other protocols lack.
+</p>
 
 
 
