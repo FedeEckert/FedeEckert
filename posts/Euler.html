@@ -157,7 +157,7 @@
   <li><strong>k</strong> = curve&nbsp;exponent&nbsp;(controls&nbsp;convexity)</li>
 </ul>
 
-<p><strong>How it behaves:</strong></p>
+<p>How it behaves:</p>
 <ul>
   <li>When utilization is low (U small):&nbsp;
     <span style="font-family:'JetBrains Mono',monospace;">r<sub>b</sub> &asymp; a, so the borrow rate will be similar to the base rate, trying to incentivize borrowing.</span>
@@ -186,16 +186,13 @@
   <li><span style="font-family:'JetBrains Mono',monospace;">r<sub>b</sub>(U)</span> is the borrow APR determined by the vault’s IRM</li>
   <li><span style="font-family:'JetBrains Mono',monospace;">r<sub>f</sub></span> is the protocol reserve factor (fee skim)</li>
 </ul>
-
-<p><strong>Example:</strong></p>
-<p style="font-family:'JetBrains Mono',monospace; background:rgba(2,6,23,0.04); padding:6px 8px; border-radius:4px; display:inline-block;">
-  U = 0.70,&nbsp; r<sub>b</sub> = 12% APR,&nbsp; r<sub>f</sub> = 0.10 → r<sub>s</sub> = 7.56% APR
+<p>
+In this way, if utilization is low and little is borrowed, suppliers earn less, even if <span style="font-family:'JetBrains Mono',monospace;">r<sub>b</sub>(U)</span> is high. Also, if <span style="font-family:'JetBrains Mono',monospace;">r<sub>f</sub></span> increases, 
+suppliers earn less as more goes to protocol reserves. Finally, when <span style="font-family:'JetBrains Mono',monospace;">r<sub>b</sub>(U)</span> rises, suppliers' APR can rise accordingly, but always tempered by utilization and the reserve factor.
+  
 </p>
 
-<p style="color:rgba(2,6,23,0.75); font-size:0.95rem;">
-  <em>Note:</em> The formula gives APR. If interest compounds during the year, APY will be higher:
-  <span style="font-family:'JetBrains Mono',monospace;">APY ≈ (1 + r<sub>s</sub>/n)<sup>n</sup> − 1</span>.
-</p>
+        
 
 
 
