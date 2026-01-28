@@ -37,21 +37,15 @@
       </p>
 
       <hr style="border-color:rgba(2,6,23,0.08); margin: 18px 0;" />
-      <p><em>Estimated read time · 12 min</em></p>
+      <p><em>Estimated read time · 20 min</em></p>
 
       <h2>Introduction</h2>
 
       <p>
-        Allocating stablecoin liquidity in decentralized finance is often approached as a yield
-        maximization problem. Capital flows toward the highest advertised APR, implicitly assuming
-        that all lending venues offering the same asset are comparable. In reality, lending USDC
-        across DeFi markets exposes liquidity providers to materially different risk profiles,
-        liquidity constraints, and tail risks.
-      </p>
-
-      <p>
-        The objective of this post is to design and explain a systematic strategy for allocating
-        USDC liquidity across DeFi lending markets in an optimal way. Rather than starting from
+        The task addressed in this post is the construction of an optimal USDC lending allocation across different DeFi markets. 
+        Although the asset being deployed is the same, lending venues differ materially in their collateral structures, 
+        liquidation mechanics, liquidity profiles, and failure modes. The objective of this post is to design and explain a 
+        systematic strategy for allocating USDC liquidity across DeFi lending markets in an optimal way. Rather than starting from
         returns, the approach builds an allocation engine from first principles: defining a
         constrained universe of opportunities, transforming that universe through a risk framework,
         and constructing a decision function capable of selecting an optimal allocation.
@@ -60,15 +54,13 @@
       <p>
         Once a baseline allocation is obtained, the framework is extended to analyze how the
         allocation behaves under stress. Two distinct classes of adverse scenarios are considered:
-        solvency-related events, where markets struggle to absorb losses, and liquidity-related
-        events, where capital cannot be efficiently withdrawn or redeployed. This allows the
-        strategy to be evaluated not only in normal conditions, but also under extreme market
-        dynamics.
+        the first one is a collateraql price drawdown, and the second one is a major systemic panic, replicating a shock like the LUNA crash or the FTX event.
+        From this we would see how the model reacts to such adverse scenarios and how allocation changes. 
       </p>
 
       <p>
         All results are based on a snapshot of DeFi markets observed on November 21st, focusing on
-        the most liquid chains and institutional-grade lending venues. While the inputs are static,
+        the most liquid chains and institutional-grade lending venues. An important assumption from the model is that there are no frictions when unwinding a position, there are no issues in reallocating the portfolio. this assumption was introduced to focus on the reallocation decisions. While the inputs are static,
         the framework is intentionally modular and designed to highlight the modeling choices,
         assumptions, and trade-offs involved in real-world liquidity allocation decisions.
       </p>
