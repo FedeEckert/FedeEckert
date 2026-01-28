@@ -1,11 +1,93 @@
-<h1>USDC Lending Strategy & Stress testing across DeFi markets</h1>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>USDC Lending Strategy & Stress testing across DeFi markets — Federico Eckert</title>
+  <meta name="description" content="Designing an optimal USDC lending strategy across DeFi markets using a risk-based allocation framework and stress testing." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=5" />
+  <link rel="icon" href="../assets/Logo1.png" type="image/png" />
+</head>
 
-<p class="section-lead">
-A step-by-step framework to design an optimal USDC lending allocation across DeFi markets:
-define an investable universe, transform opportunities through a risk model, optimize via an
-objective function, and stress-test the resulting allocation under solvency and liquidity shocks.
-</p>
+<body class="post-page">
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/Logo1.png" alt="Mate logo" class="logo" />
+      <span>Federico Eckert</span>
+    </a>
+    <nav class="nav-links">
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
 
-<hr style="border-color:rgba(2,6,23,0.08); margin: 18px 0;" />
-<p><em>Estimated read time · 20 min</em></p>
+<main>
+  <article class="section">
+    <div class="container">
+      <p><a class="btn btn-outline" href="../index.html#research">← Back to research</a></p>
 
+      <h1>USDC Lending Strategy & Stress testing across DeFi markets</h1>
+
+      <p class="section-lead">
+        How to design an optimal USDC lending allocation in DeFi by defining an investable universe,
+        building a risk framework, constructing an objective function, and stress testing the
+        resulting allocation under adverse market conditions.
+      </p>
+
+      <hr style="border-color:rgba(2,6,23,0.08); margin: 18px 0;" />
+      <p><em>Estimated read time · 12 min</em></p>
+
+      <h2>Introduction</h2>
+
+      <p>
+        Allocating stablecoin liquidity in decentralized finance is often approached as a yield
+        maximization problem. Capital flows toward the highest advertised APR, implicitly assuming
+        that all lending venues offering the same asset are comparable. In reality, lending USDC
+        across DeFi markets exposes liquidity providers to materially different risk profiles,
+        liquidity constraints, and tail risks.
+      </p>
+
+      <p>
+        The objective of this post is to design and explain a systematic strategy for allocating
+        USDC liquidity across DeFi lending markets in an optimal way. Rather than starting from
+        returns, the approach builds an allocation engine from first principles: defining a
+        constrained universe of opportunities, transforming that universe through a risk framework,
+        and constructing a decision function capable of selecting an optimal allocation.
+      </p>
+
+      <p>
+        Once a baseline allocation is obtained, the framework is extended to analyze how the
+        allocation behaves under stress. Two distinct classes of adverse scenarios are considered:
+        solvency-related events, where markets struggle to absorb losses, and liquidity-related
+        events, where capital cannot be efficiently withdrawn or redeployed. This allows the
+        strategy to be evaluated not only in normal conditions, but also under extreme market
+        dynamics.
+      </p>
+
+      <p>
+        All results are based on a snapshot of DeFi markets observed on November 21st, focusing on
+        the most liquid chains and institutional-grade lending venues. While the inputs are static,
+        the framework is intentionally modular and designed to highlight the modeling choices,
+        assumptions, and trade-offs involved in real-world liquidity allocation decisions.
+      </p>
+
+      <!-- NEXT SECTION WILL BE: Investable Universe -->
+
+      <p style="margin-top:28px;">
+        <a class="btn btn-outline" href="../index.html#research">← Back to research</a>
+      </p>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="container"><small>© <span id="year"></span> Federico Eckert</small></div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
