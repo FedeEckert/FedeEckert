@@ -25,21 +25,276 @@
     </div>
   </header>
 
-  <main class="post-content container">
-
+ <main class="post-content container">
   <h1>Vault Shock Simulator</h1>
 
   <p>
-    This interactive tool explores how a DeFi lending vault behaves under
-    sudden collateral price shocks, focusing on liquidation-driven solvency
-    risk and withdrawal liquidity stress.
+    This interactive tool stress-tests a DeFi lending vault under a sudden collateral price shock.
+    It models (i) <strong>liquidation-driven solvency risk</strong> via bad debt and (ii)
+    <strong>withdrawal liquidity resilience</strong> via a simple liquidity coverage test.
   </p>
 
-  <iframe
-    src="https://fedeeckert.github.io/vault-shock-simulator2/lab/index.html?path=vault_shock_simulator.ipynb"
-    style="width:100%; height:900px; border:1px solid #ddd; border-radius:10px;">
-  </iframe>
+  <section class="sim-card" style="padding:16px;border:1px solid rgba(0,0,0,0.12);border-radius:12px;background:#fff;">
+    <h2 style="margin-top:0;">Inputs</h2>
 
+    <div class="sim-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+      <label class="sim-field">
+        <span>Total Vault TVL (USD)</span>
+        <input id="tvl" type="number" value="100000000" step="1000000" />
+      </label>
+
+      <label class="sim-field">
+        <span>Exposure share to market (0–1)</span>
+        <input id="exposure" type="number" value="0.20" min="0" max="1" step="0.01" />
+      </label>
+
+      <label class="sim-field">
+        <span>Price shock s (0–1)</span>
+        <input id="shock" type="number" value="0.35" min="0" max="0.95" step="0.01" />
+      </label>
+
+      <label class="sim-field">
+        <span>LLTV (0–1)</span>
+        <input id="lltv" type="number" value="0.80" min="0.05" max="0.95" step="0.01" />
+      </label>
+
+      <label class="sim-field">
+        <span>Avg borrower LTV (mean)</span>
+        <input id="ltvMean" type="number" value="0.60" min="0.05" max="0.95" step="0.01" />
+      </label>
+
+      <label class="sim-field">
+        <span>Borrower LTV dispersion (std)</span>
+        <input id="ltvStd" type="number" value="0.12" min="0.01" max="0.30" step="0.01" />
+      </label>
+
+      <label class="sim-field">
+        <span>Monte Carlo samples N</span>
+        <input id="mcN" type="number" value="5000" min="500" max="50000" step="500" />
+      </label>
+
+      <label class="sim-field">
+        <span>Haircut h (slippage+fees) (0–1)</span>
+        <input id="haircut" type="number" value="0.27" min="0" max="0.80" step="0.01" />
+      </label>
+
+      <label class="sim-field">
+        <span>Run size r (withdrawals, 0–1)</span>
+        <input id="runR" type="number" value="0.20" min="0" max="1" step="0.01" />
+      </label>
+
+      <label class="sim-field">
+        <span>L0: immediate liquidity (USD)</span>
+        <input id="L0" type="number" value="8000000" step="500000" />
+      </label>
+
+      <label class="sim-field">
+        <span>L1: liquidity within horizon T (USD)</span>
+        <input id="L1" type="number" value="25000000" step="500000" />
+      </label>
+
+      <label class="sim-field">
+        <span>d: stress discount on L1 (0–1)</span>
+        <input id="d" type="number" value="0.65" min="0" max="1" step="0.01" />
+      </label>
+    </div>
+
+    <button id="runBtn" style="margin-top:14px;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:600;">
+      Run simulation
+    </button>
+
+    <p id="status" style="margin:10px 0 0 0;opacity:0.8;"></p>
+  </section>
+
+  <section class="sim-card" style="margin-top:16px;padding:16px;border:1px solid rgba(0,0,0,0.12);border-radius:12px;background:#fff;">
+    <h2 style="margin-top:0;">Results</h2>
+
+    <div id="results" style="font-family: 'JetBrains Mono', monospace; white-space: pre-wrap;"></div>
+  </section>
+
+  <section style="margin-top:16px;opacity:0.85;">
+    <h2>Model notes</h2>
+    <ul>
+      <li>Liquidation share is estimated via Monte Carlo from a bounded borrower LTV distribution (Beta) calibrated to mean and standard deviation.</li>
+      <li>Liquidation trigger: borrowers liquidate if <code>LTV_pre ≥ LLTV · (1 − s)</code>.</li>
+      <li>Bad debt: <code>max(0, Debt − Proceeds)</code>, where proceeds apply a stress haircut to approximate executable liquidation value.</li>
+      <li>Liquidity test: vault passes if <code>L0 + d·L1 ≥ r·TVL</code>.</li>
+    </ul>
+  </section>
+
+  <script>
+    // ---------- Helpers ----------
+    function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+
+    function fmtUSD(x) {
+      const sign = x < 0 ? "-" : "";
+      x = Math.abs(x);
+      return sign + "$" + x.toLocaleString(undefined, { maximumFractionDigits: 0 });
+    }
+
+    function fmtPct(x) {
+      return (100 * x).toFixed(2) + "%";
+    }
+
+    // Gamma function (Lanczos approximation) for Beta sampling
+    function gamma(z) {
+      const p = [
+        676.5203681218851, -1259.1392167224028, 771.32342877765313,
+        -176.61502916214059, 12.507343278686905, -0.13857109526572012,
+        9.9843695780195716e-6, 1.5056327351493116e-7
+      ];
+      if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
+      z -= 1;
+      let x = 0.99999999999980993;
+      for (let i = 0; i < p.length; i++) x += p[i] / (z + i + 1);
+      const t = z + p.length - 0.5;
+      return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
+    }
+
+    // Sample from N(0,1) using Box-Muller
+    function randn() {
+      let u = 0, v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    }
+
+    // Marsaglia & Tsang gamma sampler
+    function sampleGamma(k) {
+      // k > 0
+      if (k < 1) {
+        // boost to k+1 then scale
+        const u = Math.random();
+        return sampleGamma(1 + k) * Math.pow(u, 1 / k);
+      }
+      const d = k - 1/3;
+      const c = 1 / Math.sqrt(9 * d);
+      while (true) {
+        let x = randn();
+        let v = 1 + c * x;
+        if (v <= 0) continue;
+        v = v * v * v;
+        const u = Math.random();
+        if (u < 1 - 0.0331 * (x * x) * (x * x)) return d * v;
+        if (Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v;
+      }
+    }
+
+    // Beta sampler via Gamma
+    function sampleBeta(alpha, beta) {
+      const x = sampleGamma(alpha);
+      const y = sampleGamma(beta);
+      return x / (x + y);
+    }
+
+    function betaParamsFromMeanStd(mean, std) {
+      let var_ = std * std;
+      const maxVar = mean * (1 - mean) - 1e-9;
+      if (var_ >= maxVar) var_ = maxVar;
+      const k = mean * (1 - mean) / var_ - 1;
+      const a = mean * k;
+      const b = (1 - mean) * k;
+      return [a, b];
+    }
+
+    function simulateLiquidationStats({shock, LLTV, N, ltvMean, ltvStd}) {
+      const threshold = LLTV * (1 - shock);
+      const [a, b] = betaParamsFromMeanStd(ltvMean, ltvStd);
+
+      let liquidated = 0;
+      let sumLTVliq = 0;
+
+      for (let i = 0; i < N; i++) {
+        const ltvPre = sampleBeta(a, b);
+        if (ltvPre >= threshold) {
+          liquidated += 1;
+          sumLTVliq += ltvPre;
+        }
+      }
+
+      const liqFrac = liquidated / N;
+      const avgLtvLiqPre = liquidated > 0 ? (sumLTVliq / liquidated) : 0;
+      const avgLtvLiqPost = liquidated > 0 ? (avgLtvLiqPre / (1 - shock)) : 0;
+
+      return {liqFrac, avgLtvLiqPre, avgLtvLiqPost, threshold};
+    }
+
+    // ---------- Main run ----------
+    async function runSim() {
+      const status = document.getElementById("status");
+      const out = document.getElementById("results");
+
+      // Read inputs
+      const TVL = Number(document.getElementById("tvl").value);
+      const exposureShare = Number(document.getElementById("exposure").value);
+      const shock = Number(document.getElementById("shock").value);
+      const LLTV = Number(document.getElementById("lltv").value);
+      const ltvMean = Number(document.getElementById("ltvMean").value);
+      const ltvStd = Number(document.getElementById("ltvStd").value);
+      const N = Math.floor(Number(document.getElementById("mcN").value));
+      const haircut = Number(document.getElementById("haircut").value);
+
+      const runR = Number(document.getElementById("runR").value);
+      const L0 = Number(document.getElementById("L0").value);
+      const L1 = Number(document.getElementById("L1").value);
+      const d = Number(document.getElementById("d").value);
+
+      // Basic validation
+      if (!(TVL > 0)) { out.textContent = "TVL must be > 0"; return; }
+      if (shock >= 1) { out.textContent = "Shock must be < 1"; return; }
+
+      status.textContent = "Running Monte Carlo… (increase N for accuracy; lower N for speed)";
+      await new Promise(r => setTimeout(r, 50)); // allow UI repaint
+
+      // 1) Liquidation share from MC
+      const {liqFrac, avgLtvLiqPre, avgLtvLiqPost, threshold} =
+        simulateLiquidationStats({shock, LLTV, N, ltvMean, ltvStd});
+
+      // 2) Solvency / bad debt
+      const exposureUSD = TVL * exposureShare;
+      const liquidationVolumeUSD = exposureUSD * liqFrac;
+
+      const debtUSD = liquidationVolumeUSD * avgLtvLiqPost;
+      const proceedsUSD = liquidationVolumeUSD * (1 - haircut);
+
+      const badDebtUSD = Math.max(0, debtUSD - proceedsUSD);
+      const lossShareTVL = badDebtUSD / TVL;
+
+      // 3) Liquidity / withdrawals
+      const requiredRedemptions = runR * TVL;
+      const availableLiquidity = L0 + d * L1;
+      const liquidityPass = availableLiquidity >= requiredRedemptions;
+      const liquidityGap = Math.max(0, requiredRedemptions - availableLiquidity);
+
+      status.textContent = "";
+
+      // Render results
+      const lines = [];
+      lines.push("=== Solvency / Liquidations ===");
+      lines.push("Vault TVL: " + fmtUSD(TVL));
+      lines.push("Exposure in affected market: " + fmtUSD(exposureUSD) + " (" + fmtPct(exposureShare) + " of TVL)");
+      lines.push("Liquidation threshold (pre-shock): LTV_pre ≥ " + threshold.toFixed(2));
+      lines.push("Liquidation share (MC): " + fmtPct(liqFrac));
+      lines.push("Liquidation volume: " + fmtUSD(liquidationVolumeUSD));
+      lines.push("Avg LTV of liquidated borrowers (pre): " + avgLtvLiqPre.toFixed(2));
+      lines.push("Avg LTV of liquidated borrowers (post): " + avgLtvLiqPost.toFixed(2));
+      lines.push("Haircut h: " + fmtPct(haircut));
+      lines.push("Net liquidation proceeds: " + fmtUSD(proceedsUSD));
+      lines.push("Estimated bad debt: " + fmtUSD(badDebtUSD));
+      lines.push("Loss as % of TVL: " + fmtPct(lossShareTVL));
+
+      lines.push("");
+      lines.push("=== Liquidity / Withdrawals ===");
+      lines.push("Run scenario (withdrawals): " + fmtPct(runR) + " of TVL = " + fmtUSD(requiredRedemptions));
+      lines.push("Available liquidity: " + fmtUSD(availableLiquidity) + " (L0 + d·L1 with d=" + d.toFixed(2) + ")");
+      lines.push("Pass liquidity test? " + (liquidityPass ? "✅ YES" : "❌ NO"));
+      if (!liquidityPass) lines.push("Liquidity gap: " + fmtUSD(liquidityGap));
+
+      out.textContent = lines.join("\n");
+    }
+
+    document.getElementById("runBtn").addEventListener("click", runSim);
+    // run once on load
+    runSim();
+  </script>
 </main>
-</body>
-</html>
