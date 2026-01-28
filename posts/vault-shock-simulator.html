@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vault Shock Simulator</title>
+  <style>
+    body { max-width: 900px; margin: 0 auto; padding: 24px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    iframe { width: 100%; height: 950px; border: 1px solid #ddd; border-radius: 10px; }
+    .note { font-size: 0.95em; opacity: 0.85; }
+  </style>
+</head>
+<body>
+  <h1>Vault Shock Simulator (Q3)</h1>
+  <p>
+    Interactive toy model for liquidation-driven solvency risk + withdrawal liquidity stress.
+    Change inputs and re-run to see how bad debt and liquidity coverage evolve.
+  </p>
+
+  <iframe
+    src="https://fedeeckert.github.io/vault-shock-simulator2/lab/index.html?path=vault_shock_simulator.ipynb">
+  </iframe>
+
+  <p class="note">
+    If the embedded notebook is slow on mobile, open it in a new tab:
+    <a href="https://fedeeckert.github.io/vault-shock-simulator2/" target="_blank" rel="noopener">Open simulator</a>.
+  </p>
+</body>
+</html>
