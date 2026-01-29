@@ -78,7 +78,63 @@
     lending systems.
   </p>
 </section>
-   
+   <section>
+  <h2>2. Vault setup and core variables</h2>
+
+  <p>
+    We begin by defining the vault’s size and how much of its capital is exposed
+    to the market impacted by the shock. The simulator operates in USD terms for
+    clarity and interprets exposures as fractions of the vault’s total assets.
+  </p>
+
+  <h3>Vault size (TVL)</h3>
+  <p>
+    The starting point is the vault’s <strong>Total Value Locked (TVL)</strong>,
+    which represents the total value of assets managed by the vault:
+  </p>
+  <ul>
+    <li><strong>TVL</strong>: total vault assets (USD).</li>
+  </ul>
+
+  <h3>Exposure to the affected market</h3>
+  <p>
+    The vault is assumed to have deployed a fraction of its TVL into a specific
+    lending market (or collateral bucket) that becomes stressed when the
+    collateral price drops. This is captured by:
+  </p>
+  <ul>
+    <li>
+      <strong>Exposure share</strong>: fraction of TVL allocated to the affected market
+      (a number between 0 and 1).
+    </li>
+  </ul>
+
+  <p>
+    The dollar value of the vault’s exposure to the affected market is therefore:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    E = TVL &times; exposure_share
+  </p>
+
+  <h3>Shock severity</h3>
+  <p>
+    The stress event is a sudden downward move in the collateral price. We express
+    this as a proportional drop:
+  </p>
+  <ul>
+    <li>
+      <strong>Shock (s)</strong>: collateral price drop expressed as a fraction (0 to 1).
+      For example, <code>s = 0.35</code> corresponds to a 35% drop.
+    </li>
+  </ul>
+
+  <p>
+    This setup focuses on a single shocked collateral market at a time. The goal is
+    not to predict outcomes, but to explore how changing the vault’s exposure,
+    leverage assumptions, and shock size affects solvency and liquidity under stress.
+  </p>
+</section>
 
 
 
