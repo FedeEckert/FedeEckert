@@ -316,8 +316,8 @@
 
   <h3>Endogenous liquidation haircut</h3>
   <p>
-    Rather than treating execution losses as a fixed input, the simulator models
-    the haircut as an increasing and convex function of the shock size:
+    The simulator models the haircut as an increasing and convex function of the 
+    shock size:
   </p>
 
   <p style="font-family: 'JetBrains Mono', monospace;">
@@ -392,7 +392,96 @@
   </p>
 </section>   
 
+<section>
+  <h2>6. Withdrawal pressure and vault-level liquidity stress</h2>
 
+  <p>
+    Even if liquidation dynamics are sufficient to prevent insolvency, a sharp
+    price shock may still trigger a surge in withdrawal requests. Depositors may
+    attempt to exit simultaneously, creating liquidity stress at the vault
+    level. This section evaluates whether the vault can meet redemptions in an
+    orderly manner under such conditions.
+  </p>
+
+  <h3>Modeling a withdrawal run</h3>
+  <p>
+    Withdrawal pressure is modeled as a fraction of the vault’s total assets
+    requested for redemption over a short horizon:
+  </p>
+
+  <ul>
+    <li>
+      <strong>Run size (r)</strong>: fraction of TVL demanded for withdrawal
+      (e.g., <code>r = 0.20</code> corresponds to a 20% run).
+    </li>
+  </ul>
+
+  <p>
+    The total redemption amount implied by the run scenario is therefore:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    R = r · TVL
+  </p>
+
+  <h3>Liquidity buckets</h3>
+  <p>
+    Vault assets are grouped into liquidity buckets based on how quickly they
+    can be converted into cash without incurring losses:
+  </p>
+
+  <ul>
+    <li>
+      <strong>L<sub>0</sub></strong>: immediately available liquidity (idle assets).
+    </li>
+    <li>
+      <strong>L<sub>1</sub></strong>: assets that can be withdrawn or unwound within
+      a short horizon under normal conditions.
+    </li>
+    <li>
+      <strong>L<sub>2</sub></strong>: illiquid or locked positions not available
+      for near-term withdrawals.
+    </li>
+  </ul>
+
+  <p>
+    Under stress, even assets that are normally withdrawable may be subject to
+    utilization spikes, unwind delays, or adverse pricing. To reflect this, the
+    model applies a discount factor:
+  </p>
+
+  <ul>
+    <li>
+      <strong>d</strong>: stress discount applied to <code>L<sub>1</sub></code>,
+      with values between 0 and 1.
+    </li>
+  </ul>
+
+  <p>
+    The amount of liquidity realistically available to meet withdrawals is thus:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    L<sub>avail</sub> = L<sub>0</sub> + d · L<sub>1</sub>
+  </p>
+
+  <h3>Liquidity coverage condition</h3>
+  <p>
+    The vault is considered able to meet withdrawals without disorderly actions
+    if available liquidity exceeds required redemptions:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    L<sub>0</sub> + d · L<sub>1</sub> ≥ r · TVL
+  </p>
+
+  <p>
+    If this condition holds, withdrawals can be serviced without gating or
+    forced asset sales. If it fails, the vault may remain solvent on paper but
+    face operational stress, including delayed withdrawals, emergency unwinds,
+    or realized losses due to rushed liquidations.
+  </p>
+</section>
 
 
 
