@@ -699,16 +699,7 @@
     <div id="results" style="font-family: 'JetBrains Mono', monospace; white-space: pre-wrap;"></div>
   </section>
 
-  <section style="margin-top:16px;opacity:0.85;">
-    <h2>Model notes</h2>
-    <ul>
-      <li>Liquidation share is estimated via Monte Carlo from a bounded borrower LTV distribution (Beta) calibrated to mean and standard deviation.</li>
-      <li>Liquidation trigger: borrowers liquidate if <code>LTV_pre ≥ LLTV · (1 − s)</code>.</li>
-      <li>Bad debt: <code>max(0, Debt − Proceeds)</code>, where proceeds apply a stress haircut to approximate executable liquidation value.</li>
-      <li>Liquidity test: vault passes if <code>L0 + d·L1 ≥ r·TVL</code>.</li>
-    </ul>
-  </section>
-
+ 
   <script>
     // ---------- Helpers ----------
     function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
