@@ -483,8 +483,140 @@
   </p>
 </section>
 
+<section>
+  <h2>7. Key insights and interpretation</h2>
 
+  <p>
+    Although highly simplified, the simulator highlights several important
+    dynamics that are often understated in high-level risk assessments of DeFi
+    lending systems.
+  </p>
 
+  <h3>Liquidation does not guarantee solvency</h3>
+  <p>
+    Liquidations are frequently treated as a safeguard that automatically
+    protects lenders from loss. The model shows that this is not always the
+    case. When shocks are large, liquidations concentrate in the most leveraged
+    tail of borrowers and must be executed under stressed market conditions.
+    If execution prices deteriorate sufficiently, liquidation proceeds may be
+    insufficient to fully repay debt, resulting in bad debt for the vault.
+  </p>
+
+  <h3>Losses are nonlinear in stress</h3>
+  <p>
+    Several nonlinear mechanisms interact during a shock:
+  </p>
+  <ul>
+    <li>Liquidation share increases sharply as the shock deepens.</li>
+    <li>Liquidated borrowers tend to have much higher leverage than average.</li>
+    <li>Execution haircuts widen disproportionately in severe market conditions.</li>
+  </ul>
+
+  <p>
+    These effects compound rather than offset one another, meaning that modest
+    increases in shock severity can lead to disproportionately larger losses.
+  </p>
+
+  <h3>Solvency and liquidity are distinct risks</h3>
+  <p>
+    The simulator makes a clear distinction between solvency and liquidity.
+    A vault may pass the liquidation test and still face withdrawal pressure
+    that exceeds available liquidity. Conversely, a vault may remain liquid
+    while still incurring solvency losses due to bad debt.
+  </p>
+
+  <p>
+    This distinction is critical for vault design and risk monitoring, as
+    mitigation strategies differ across the two dimensions. Conservatively
+    calibrated liquidation parameters do not, on their own, guarantee that
+    a vault can withstand a sudden run by depositors.
+  </p>
+
+  <h3>Why exposure concentration matters</h3>
+  <p>
+    Finally, the model highlights the importance of exposure sizing. Even if a
+    single market appears individually safe, concentrated deployment can
+    amplify losses at the vault level. Limiting exposure to any single collateral
+    market materially reduces the impact of tail events.
+  </p>
+</section>
+<section>
+  <h2>8. Limitations, assumptions, and possible extensions</h2>
+
+  <p>
+    This simulator is intentionally simplified. Its purpose is not to predict
+    precise outcomes, but to illustrate the mechanisms through which losses and
+    operational stress can emerge in collateralized lending vaults under adverse
+    market conditions. As such, several assumptions and limitations should be
+    kept in mind when interpreting the results.
+  </p>
+
+  <h3>Key assumptions</h3>
+  <ul>
+    <li>
+      <strong>Borrower distribution:</strong> Borrower LTVs are approximated using
+      a Beta distribution parameterized by a mean and standard deviation. In a
+      production setting, this would be replaced with the actual on-chain
+      distribution of borrower positions.
+    </li>
+    <li>
+      <strong>Equal exposure:</strong> The model assumes equal exposure per
+      borrower within the affected market. Real systems typically exhibit
+      heavy-tailed exposure distributions, which could further amplify losses.
+    </li>
+    <li>
+      <strong>Reduced-form execution costs:</strong> Liquidation execution is
+      summarized by a single endogenous haircut function. This captures stress
+      effects qualitatively, but does not explicitly model order book depth or
+      liquidation competition.
+    </li>
+    <li>
+      <strong>Instantaneous shock:</strong> The price drop is modeled as an
+      instantaneous event. Effects such as oracle lag, smoothing, or delayed
+      liquidations are not explicitly represented.
+    </li>
+  </ul>
+
+  <h3>Interpretation guidance</h3>
+  <p>
+    Results should be interpreted directionally rather than literally. A
+    positive bad debt estimate indicates that the combination of leverage,
+    execution frictions, and exposure sizing is insufficiently conservative
+    under the chosen scenario. A failed liquidity test indicates vulnerability
+    to withdrawal pressure, even if the vault remains solvent on paper.
+  </p>
+
+  <h3>Potential extensions</h3>
+  <p>
+    The framework can be extended in several directions without changing its
+    core structure:
+  </p>
+  <ul>
+    <li>
+      Making execution haircuts a function of forced sell volume relative to
+      explicit market depth, rather than shock size alone.
+    </li>
+    <li>
+      Incorporating oracle behavior such as lag, smoothing, or divergence between
+      reference prices and executable prices.
+    </li>
+    <li>
+      Modeling heterogeneous borrower sizes or clustered leverage.
+    </li>
+    <li>
+      Extending the liquidity module to include time dynamics and staged
+      withdrawals.
+    </li>
+  </ul>
+
+  <p>
+    Despite these limitations, the simulator provides a coherent framework for
+    reasoning about liquidation-driven solvency risk and withdrawal liquidity
+    risk in DeFi lending vaults. By making assumptions explicit and mechanics
+    transparent, it aims to support clearer thinking about stress scenarios and
+    risk trade-offs in vault design.
+  </p>
+</section>
 
 
 
