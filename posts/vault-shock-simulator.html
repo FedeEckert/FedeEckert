@@ -34,6 +34,54 @@
     <strong>withdrawal liquidity resilience</strong> via a simple liquidity coverage test.
   </p>
 
+  <section>
+  <h2>1. Overview and objective</h2>
+
+  <p>
+    The objective of this model is to assess whether a DeFi lending vault can
+    safely withstand a sudden and adverse price shock affecting one of its
+    accepted collateral assets, without generating bad debt or failing to meet
+    withdrawal requests.
+  </p>
+
+  <p>
+    In practice, a sharp drop in collateral prices can stress a vault through
+    multiple channels simultaneously. Even if the underlying asset has passed
+    an ex-ante risk assessment, extreme market conditions may still expose
+    weaknesses in liquidation mechanics, execution liquidity, or balance-sheet
+    resilience.
+  </p>
+
+  <p>
+    To capture these dynamics in a transparent and interpretable way, the model
+    decomposes the shock into two distinct but interacting risk channels:
+  </p>
+
+  <ol>
+    <li>
+      <strong>Solvency and liquidations:</strong>
+      assessing whether forced liquidations triggered by the price shock can be
+      executed without generating losses for the vault, or whether execution
+      frictions lead to bad debt.
+    </li>
+    <li>
+      <strong>Liquidity and withdrawals:</strong>
+      assessing whether the vault can meet a sudden increase in redemptions
+      without gating withdrawals or resorting to disorderly asset sales.
+    </li>
+  </ol>
+
+  <p>
+    By jointly analyzing these two dimensions, the simulator aims to illustrate
+    how price risk, leverage, and liquidity interact under stress, and how losses
+    or operational disruptions can emerge even in otherwise well-structured
+    lending systems.
+  </p>
+</section>
+   
+
+
+
   <section class="sim-card" style="padding:16px;border:1px solid rgba(0,0,0,0.12);border-radius:12px;background:#fff;">
     <h2 style="margin-top:0;">Inputs</h2>
 
