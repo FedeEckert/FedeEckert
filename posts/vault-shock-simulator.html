@@ -286,8 +286,120 @@
   </p>
 </section>
 
+<section>
+  <h2>5. Liquidation proceeds, execution frictions, and bad debt</h2>
+
+  <p>
+    When liquidations are triggered, collateral must be sold into the market in
+    order to repay outstanding debt. In idealized models, this sale is often
+    assumed to occur at the oracle price. In practice, however, stressed
+    conditions introduce significant execution frictions.
+  </p>
+
+  <h3>Execution frictions under stress</h3>
+  <p>
+    During sharp market moves, forced liquidations tend to coincide with:
+  </p>
+  <ul>
+    <li>Reduced market depth and wider bid–ask spreads</li>
+    <li>Competition among liquidators</li>
+    <li>Liquidation incentives and protocol fees</li>
+    <li>MEV and adverse selection effects</li>
+  </ul>
+
+  <p>
+    As a result, the price at which collateral can actually be sold is often
+    meaningfully worse than the oracle-implied valuation. The model captures
+    these effects through a single reduced-form parameter: a
+    <strong>liquidation haircut</strong>.
+  </p>
+
+  <h3>Endogenous liquidation haircut</h3>
+  <p>
+    Rather than treating execution losses as a fixed input, the simulator models
+    the haircut as an increasing and convex function of the shock size:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    h(s) = h<sub>0</sub> + (h<sub>max</sub> − h<sub>0</sub>) · (1 − e<sup>−k·s</sup>)
+  </p>
+
+  <p>
+    where:
+  </p>
+  <ul>
+    <li>
+      <strong>h<sub>0</sub></strong>: baseline execution friction under normal conditions
+    </li>
+    <li>
+      <strong>h<sub>max</sub></strong>: maximum haircut under extreme stress
+    </li>
+    <li>
+      <strong>k</strong>: sensitivity parameter controlling how quickly execution deteriorates
+    </li>
+  </ul>
+
+  <p>
+    This functional form reflects the empirical observation that small price
+    moves can be absorbed with limited slippage, while large shocks tend to
+    produce disproportionately worse execution outcomes.
+  </p>
+
+  <h3>Liquidation proceeds</h3>
+  <p>
+    Given a liquidation volume <code>Q</code> and haircut <code>h(s)</code>, the net
+    proceeds obtained from selling collateral are approximated as:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    Proceeds = Q · (1 − h(s))
+  </p>
+
+  <h3>Debt associated with liquidated positions</h3>
+  <p>
+    The debt that must be repaid by liquidations is determined by the leverage of
+    the liquidated borrowers. The model uses the average post-shock LTV of the
+    liquidated subset, ensuring that debt reflects the riskier tail of the
+    borrower distribution:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    Debt = Q · LTV<sub>liq</sub><sup>post</sup>
+  </p>
+
+  <h3>Bad debt and solvency loss</h3>
+  <p>
+    If liquidation proceeds are insufficient to cover the associated debt, the
+    difference manifests as <strong>bad debt</strong> borne by the vault:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    Bad&nbsp;Debt = max(0, Debt − Proceeds)
+  </p>
+
+  <p>
+    To assess materiality, the simulator scales this loss by total vault size:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    Loss&nbsp;Share = Bad&nbsp;Debt / TVL
+  </p>
+
+  <p>
+    A zero value indicates that liquidations are sufficient to repay debt even
+    under stress. A positive value indicates that execution frictions and
+    leverage have combined to generate insolvency losses for the vault.
+  </p>
+</section>   
 
 
+
+
+
+
+
+
+   
 
    
 
