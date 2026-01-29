@@ -206,7 +206,90 @@
     <code>LTV_pre</code> above <code>LLTV &times; (1 − s)</code>.
   </p>
 </section>
+<section>
+  <h2>4. Endogenous liquidation volume via Monte Carlo simulation</h2>
 
+  <p>
+    In a live protocol, liquidation volume would be computed directly from the
+    distribution of borrower positions on-chain. In this simulator, borrower
+    positions are approximated statistically in order to focus on mechanisms
+    rather than exact replication.
+  </p>
+
+  <h3>Modeling borrower leverage</h3>
+  <p>
+    Borrowers’ pre-shock LTVs are modeled using a <strong>Beta distribution</strong>
+    defined on the interval <code>[0, 1]</code>. This choice reflects the fact that LTVs
+    are naturally bounded and allows the distribution to flexibly capture skew
+    and tail behavior.
+  </p>
+
+  <ul>
+    <li>
+      <strong>Average borrower LTV (mean)</strong>: controls the central level of leverage in the market.
+    </li>
+    <li>
+      <strong>LTV dispersion (standard deviation)</strong>: controls how concentrated or dispersed leverage is.
+    </li>
+    <li>
+      <strong>Monte Carlo samples (N)</strong>: number of simulated borrowers used to approximate the distribution.
+    </li>
+  </ul>
+
+  <p>
+    Using these inputs, the simulator draws <code>N</code> independent borrower LTVs and
+    evaluates which of them breach the liquidation condition derived in the
+    previous section.
+  </p>
+
+  <h3>Liquidation share</h3>
+  <p>
+    For a given shock size <code>s</code> and liquidation threshold <code>LLTV</code>, the
+    fraction of borrowers that become liquidatable is computed as:
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    α(s) = Pr(LTV_pre ≥ LLTV · (1 − s))
+  </p>
+
+  <p>
+    This liquidation share <code>α(s)</code> is an endogenous output of the model. It
+    increases nonlinearly with both the severity of the shock and the level of
+    leverage in the borrower population.
+  </p>
+
+  <h3>Liquidation volume</h3>
+  <p>
+    To translate borrower-level liquidations into a dollar amount, the model
+    assumes equal exposure across borrowers. Under this simplifying assumption,
+    the fraction of liquidated borrowers corresponds to the fraction of exposed
+    capital that must be liquidated.
+  </p>
+
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    Q = E · α(s)
+  </p>
+
+  <p>
+    where <code>E</code> is the vault’s exposure to the affected market. The resulting
+    quantity <code>Q</code> represents the total notional value of collateral that must be
+    sold under stress.
+  </p>
+
+  <h3>Why the tail matters</h3>
+  <p>
+    Importantly, the model does not treat liquidations as coming from an average
+    borrower. The simulator separately tracks the <em>average LTV of liquidated
+    borrowers</em>, which is typically much higher than the population average.
+    This ensures that losses are driven by the leveraged tail of the distribution,
+    where risk actually concentrates during stress events.
+  </p>
+</section>
+
+
+
+
+   
 
   <section class="sim-card" style="padding:16px;border:1px solid rgba(0,0,0,0.12);border-radius:12px;background:#fff;">
     <h2 style="margin-top:0;">Inputs</h2>
