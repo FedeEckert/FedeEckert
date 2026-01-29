@@ -119,7 +119,7 @@
 
   <h3>Shock severity</h3>
   <p>
-    The stress event is a sudden downward move in the collateral price. We express
+    The stress event is a sudden downward move in the collateral price, focusing on a single shocked collateral market at a time. We express
     this as a proportional drop:
   </p>
   <ul>
@@ -128,14 +128,84 @@
       For example, <code>s = 0.35</code> corresponds to a 35% drop.
     </li>
   </ul>
+</section>
+<section>
+  <h2>3. Borrower leverage, LTV dynamics, and liquidation triggers</h2>
 
   <p>
-    This setup focuses on a single shocked collateral market at a time. The goal is
-    not to predict outcomes, but to explore how changing the vault’s exposure,
-    leverage assumptions, and shock size affects solvency and liquidity under stress.
+    In collateralized lending markets, risk is transmitted through borrower leverage.
+    The key quantity is the <strong>Loan-to-Value (LTV)</strong>, which measures how much
+    debt is outstanding relative to the value of posted collateral.
+  </p>
+
+  <h3>Loan-to-Value (LTV)</h3>
+  <p>
+    By definition:
+  </p>
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    LTV = Debt / CollateralValue
+  </p>
+
+  <p>
+    Intuitively:
+  </p>
+  <ul>
+    <li>Higher LTV means the borrower is more leveraged and closer to liquidation.</li>
+    <li>Lower LTV means the borrower has more collateral buffer and is safer.</li>
+  </ul>
+
+  <h3>Liquidation threshold (LLTV)</h3>
+  <p>
+    The market defines a <strong>liquidation threshold</strong>, often called LLTV in DeFi money markets.
+    If a borrower’s LTV rises above this threshold, the position becomes eligible for liquidation:
+  </p>
+  <ul>
+    <li>
+      <strong>LLTV</strong>: liquidation LTV threshold (0 to 1). Positions above this level may be liquidated.
+    </li>
+  </ul>
+
+  <h3>Why a price shock increases LTV</h3>
+  <p>
+    A key mechanical property of lending markets is that collateral prices can move rapidly, but
+    borrower debt does not automatically decrease at the same time. If collateral prices fall by
+    <code>s</code>, collateral value becomes <code>(1 − s)</code> of what it was. Debt remains unchanged in the instant
+    of the shock, so LTV mechanically rises.
+  </p>
+
+  <p>
+    This relationship can be written directly:
+  </p>
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    LTV_post = LTV_pre / (1 − s)
+  </p>
+
+  <p>
+    This explains why leverage risk becomes nonlinear in large shocks: as <code>s</code> increases toward 1,
+    the denominator <code>(1 − s)</code> shrinks and LTV rises rapidly.
+  </p>
+
+  <h3>Liquidation trigger condition</h3>
+  <p>
+    A borrower becomes liquidatable after the shock if their post-shock LTV exceeds LLTV:
+  </p>
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    LTV_post ≥ LLTV
+  </p>
+
+  <p>
+    Substituting the post-shock relationship gives a simple cutoff in terms of the borrower’s pre-shock LTV:
+  </p>
+  <p style="font-family: 'JetBrains Mono', monospace;">
+    LTV_pre / (1 − s) ≥ LLTV  &nbsp;&rarr;&nbsp;  LTV_pre ≥ LLTV &times; (1 − s)
+  </p>
+
+  <p>
+    This cutoff is central to the simulator. For a given shock size <code>s</code> and liquidation threshold <code>LLTV</code>,
+    the model can determine what fraction of borrowers are pushed into liquidation by checking how many have
+    <code>LTV_pre</code> above <code>LLTV &times; (1 − s)</code>.
   </p>
 </section>
-
 
 
   <section class="sim-card" style="padding:16px;border:1px solid rgba(0,0,0,0.12);border-radius:12px;background:#fff;">
