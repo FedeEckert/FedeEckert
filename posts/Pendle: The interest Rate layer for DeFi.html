@@ -1,1 +1,580 @@
+<!doctype html>
 
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pendle: The Interest Rate Layer for DeFi — Federico Eckert</title>
+  <meta name="description" content="A deep dive into Pendle's yield tokenization model, tokenomics, and its role as foundational interest rate infrastructure for DeFi." />
+  <meta property="og:title" content="Pendle: The Interest Rate Layer for DeFi" />
+  <meta property="og:description" content="How Pendle turns passive DeFi yield into a tradable financial instrument — and what that means for on-chain fixed income." />
+  <meta property="og:image" content="../assets/og-image.png" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="../assets/Logo1.png" type="image/png">
+  <link rel="stylesheet" href="../styles.css?v=6" />
+  <style>
+    /* ── Post-specific layout ── */
+    .post-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 56px 0 96px;
+    }
+
+```
+/* Header meta row */
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.post-meta .chip {
+  display: inline-block;
+  padding: 5px 11px;
+  border: 1px dashed rgba(14,165,233,0.45);
+  border-radius: 999px;
+  font-size: 12px;
+  color: #0C4A6E;
+  background: rgba(125,211,252,0.18);
+  font-family: 'JetBrains Mono', monospace;
+}
+.post-meta .read-time {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Title */
+.post-title {
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.15;
+  font-weight: 800;
+  margin: 0 0 16px;
+}
+.post-subtitle {
+  font-size: 18px;
+  color: var(--muted);
+  margin: 0 0 40px;
+  line-height: 1.6;
+}
+
+/* Divider */
+.post-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 40px 0;
+}
+
+/* Body prose */
+.post-body h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 52px 0 12px;
+  padding-top: 4px;
+}
+.post-body h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 36px 0 10px;
+  color: var(--text);
+}
+.post-body p {
+  margin: 0 0 18px;
+  color: #1E293B;
+  line-height: 1.75;
+  font-size: 16px;
+}
+.post-body ul, .post-body ol {
+  margin: 0 0 18px;
+  padding-left: 22px;
+  color: #1E293B;
+  line-height: 1.75;
+  font-size: 16px;
+}
+.post-body li {
+  margin-bottom: 8px;
+}
+.post-body strong {
+  font-weight: 600;
+  color: var(--text);
+}
+.post-body em {
+  font-style: italic;
+}
+
+/* Callout / key insight box */
+.callout {
+  background: rgba(14,165,233,0.07);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 28px 0;
+}
+.callout p {
+  margin: 0;
+  color: var(--text);
+  font-size: 15px;
+}
+
+/* Key metrics grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin: 28px 0;
+}
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.metric-card .metric-value {
+  font-size: 26px;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--primary), var(--mint));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: block;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.metric-card .metric-label {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.4;
+}
+
+/* PT/YT example table */
+.example-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 14px;
+}
+.example-table th {
+  background: rgba(14,165,233,0.08);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text);
+}
+.example-table td {
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  color: #1E293B;
+  vertical-align: top;
+}
+.example-table tr:nth-child(even) td {
+  background: rgba(2,6,23,0.02);
+}
+
+/* Chart placeholder */
+.chart-placeholder {
+  background: linear-gradient(135deg, rgba(14,165,233,0.05), rgba(124,58,237,0.05));
+  border: 1px dashed rgba(14,165,233,0.35);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  margin: 24px 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.chart-placeholder .chart-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+.chart-placeholder .chart-title {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+/* Section label (h2 accent) */
+.section-label {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--primary);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Tags row at top */
+.post-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.post-tags span {
+  font-size: 12px;
+  color: var(--muted);
+  background: rgba(2,6,23,0.04);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+
+/* Data sources footer */
+.data-sources {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Back link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 40px;
+  transition: color .15s;
+}
+.back-link:hover { color: var(--primary); }
+
+@media (max-width: 640px) {
+  .post-wrap { padding: 32px 0 64px; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+```
+
+  </style>
+</head>
+<body class="post-page">
+
+  <!-- ── HEADER ── -->
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../index.html">
+        <img src="../assets/Logo1.png" alt="" class="logo">
+        <span>Federico Eckert</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="../index.html#research">Research</a>
+        <a href="../index.html#about">About me</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="btn btn-outline" href="../cv/Federico_Eckert_CV.pdf" download>Download CV</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Open menu" onclick="toggleNav()">☰</button>
+    </div>
+  </header>
+
+  <!-- ── POST ── -->
+
+  <main>
+    <div class="container">
+      <div class="post-wrap">
+
+```
+    <!-- Back -->
+    <a class="back-link" href="../index.html#research">
+      &#8592; Back to Research
+    </a>
+
+    <!-- Meta -->
+    <div class="post-meta">
+      <span class="chip">DeFi</span>
+      <span class="chip">Yield Markets</span>
+      <span class="chip">Tokenomics</span>
+      <span class="chip">Fixed Income</span>
+      <span class="read-time">~15 min read</span>
+    </div>
+
+    <!-- Title block -->
+    <h1 class="post-title">Pendle: The Interest Rate Layer for DeFi</h1>
+    <p class="post-subtitle">
+      How Pendle turns passive DeFi yield into a tradable financial instrument — and what that means for on-chain fixed income.
+    </p>
+
+    <hr class="post-divider">
+
+    <!-- ── BODY ── -->
+    <div class="post-body">
+
+      <!-- INTRO -->
+      <span class="section-label">Overview</span>
+      <h2>Protocol Overview</h2>
+
+      <p>
+        Decentralized finance has introduced a wide range of yield-bearing assets, including liquid staking tokens, restaking assets, and synthetic dollar instruments. While these assets generate yield, that yield is typically variable and realized passively over time, limiting users' ability to actively manage interest rate exposure or access future returns immediately.
+      </p>
+      <p>
+        In traditional finance, interest rates and yield streams are actively traded through fixed-income instruments such as bonds, interest rate swaps, and forwards. These markets allow participants to lock in fixed returns, hedge interest rate risk, or speculate on future rate movements. Until recently, equivalent functionality did not exist in DeFi, where yield remained largely non-transferable and dependent on passive holding. In other words, yield in DeFi was highly illiquid, limiting the possible financial operations and the overall growth of the ecosystem.
+      </p>
+      <p>
+        Pendle addresses this limitation by enabling the tokenization and trading of future yield, transforming yield from a passive return into a tradable financial instrument. This enables users to lock in fixed yields, speculate on future yield changes, or access anticipated returns upfront to improve capital efficiency. In doing so, Pendle introduces interest rate markets into DeFi, allowing yield to be priced, traded, and managed dynamically through market mechanisms.
+      </p>
+
+      <!-- HOW IT WORKS -->
+      <span class="section-label">Mechanics</span>
+      <h2>How It Works: PT and YT</h2>
+
+      <p>
+        Pendle operates by splitting a yield-bearing asset into two separate tokens:
+      </p>
+      <ul>
+        <li><strong>Principal Token (PT):</strong> Represents ownership of the underlying asset and can be redeemed for its full value at a predefined maturity date.</li>
+        <li><strong>Yield Token (YT):</strong> Represents the right to receive all yield generated by the underlying asset until maturity.</li>
+      </ul>
+      <p>
+        These tokens can then be traded independently within Pendle's marketplace. A concrete example illustrates the mechanics:
+      </p>
+
+      <table class="example-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Description</th>
+            <th>Approximate value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Deposit</strong></td>
+            <td>$1,000 sETH (5% APY). Market yield on Pendle: 6%</td>
+            <td>$1,000</td>
+          </tr>
+          <tr>
+            <td><strong>Principal Token (PT)</strong></td>
+            <td>Redeemable for $1,000 at maturity, trading at a discount today</td>
+            <td>~$940</td>
+          </tr>
+          <tr>
+            <td><strong>Yield Token (YT)</strong></td>
+            <td>Right to receive all yield generated until maturity</td>
+            <td>~$60</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        This structure enables a range of financial strategies. Users seeking predictable returns may sell their YT and retain PT, effectively converting variable yield into a fixed return. Conversely, users expecting higher future yields may purchase YT to gain leveraged exposure to yield fluctuations. This separation allows market participants to manage yield exposure according to their individual risk preferences, market expectations, or financial needs.
+      </p>
+
+      <h3>The Pendle AMM</h3>
+      <p>
+        Pendle facilitates these trades through a custom automated market maker specifically designed for yield-bearing assets. Unlike traditional AMMs, Pendle's AMM incorporates time to maturity into its pricing mechanism, allowing token prices to converge toward redemption value as maturity approaches. This enables efficient price discovery for future yield and ensures consistent liquidity throughout the asset's lifecycle.
+      </p>
+
+      <!-- ADOPTION -->
+      <span class="section-label">Growth</span>
+      <h2>Adoption and Ecosystem Growth</h2>
+
+      <p>
+        Pendle's growth has closely tracked the expansion of yield-bearing assets across DeFi, particularly with the rise of liquid staking, restaking, and synthetic yield protocols. Since launching V2, Pendle has grown into the largest on-chain yield trading platform by total value locked.
+      </p>
+      <p>
+        The protocol currently operates across ten blockchains — Ethereum, Arbitrum, BSC, Base, Sonic, Berachain, HyperEVM, Plasma, Mantle, and Optimism — and is actively expanding to non-EVM ecosystems including Solana via cross-chain principal tokens. With 552 active markets spanning assets from Lido's stETH to Ethena's sUSDe, Pendle has established itself as core infrastructure for on-chain interest rate exposure.
+      </p>
+
+      <h3>Key 2025 Metrics</h3>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value">$58B</span>
+          <span class="metric-label">Fixed yield settled (+161% YoY)</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">$5.7B</span>
+          <span class="metric-label">Average TVL (+76% YoY)</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">$40M</span>
+          <span class="metric-label">Annualized protocol revenue</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">552</span>
+          <span class="metric-label">Active markets across 10+ chains</span>
+        </div>
+      </div>
+
+      <p>
+        TVL growth reflects the increasing amount of capital allocated to Pendle's yield markets. The multichain composition of TVL reveals meaningful diversification: while Ethereum remains the dominant chain, newer deployments on Arbitrum, Plasma, and HyperEVM have attracted significant capital, reducing dependence on a single ecosystem.
+      </p>
+
+      <!-- CHART PLACEHOLDER: TVL over time -->
+      <div class="chart-placeholder">
+        <span class="chart-icon">📈</span>
+        <span class="chart-title">Pendle TVL by Chain (Jan 2025 – Feb 2026)</span>
+        <span>Dune Analytics — breakdown by Ethereum, Arbitrum, Plasma, HyperEVM, and other deployments</span>
+      </div>
+
+      <p>
+        This growth in on-chain activity was accompanied by rising secondary market interest in the PENDLE token. Daily CEX trading volume increased significantly from mid-2025, peaking alongside the protocol's TVL highs in August–September before moderating into 2026, reflecting the token's sensitivity to broader protocol adoption cycles.
+      </p>
+
+      <!-- CHART PLACEHOLDER: TVL vs CEX Volume -->
+      <div class="chart-placeholder">
+        <span class="chart-icon">📊</span>
+        <span class="chart-title">PENDLE TVL vs. CEX Daily Trading Volume (2025)</span>
+        <span>CoinDesk Data API / DefiLlama — monthly overlay</span>
+      </div>
+
+      <h3>Boros: Expansion into Funding Rate Markets</h3>
+      <p>
+        Beyond its core yield tokenization product, Pendle launched Boros — a funding-rate derivatives platform designed to bring institutional-grade rate markets to decentralized finance. Boros tokenizes perpetual funding rates, transforming an untradable yield stream into a tradable instrument. This targets the $150B+/day perpetual swap market, a significantly larger total addressable market than spot yield alone.
+      </p>
+      <p>
+        By year-end 2025, Boros had achieved approximately $6.9 billion in open interest, $91 million in deposits, and generated $6.8 million in fees, demonstrating early product-market fit for rate derivatives on-chain.
+      </p>
+
+      <h3>Institutional Adoption</h3>
+      <p>
+        Pendle introduced KYC-compliant Citadels in 2025, offering regulated access to on-chain fixed income through partnerships with investment managers. The protocol is also exploring Shariah-compliant offerings targeting the $4.5 trillion Islamic finance market. These moves position Pendle to capture institutional capital that requires compliance infrastructure before entering DeFi.
+      </p>
+
+      <!-- TOKENOMICS -->
+      <span class="section-label">Token Design</span>
+      <h2>Tokenomics and Incentive Structure</h2>
+
+      <p>
+        PENDLE's native token plays a central role in coordinating incentives and governance. It is designed to align token holders with the growth and economic performance of the platform.
+      </p>
+
+      <h3>Revenue Model</h3>
+      <p>
+        Pendle generates revenue primarily through transaction fees charged on trades executed within its AMM. Each swap involving PT or YT incurs a fee, paid by users trading yield exposure, contributing directly to protocol revenue. Because Pendle functions as a marketplace for yield, its revenue is closely tied to trading activity across its pools.
+      </p>
+      <p>
+        Periods of elevated demand for yield trading — driven by increased DeFi participation or shifting yield expectations — typically result in higher trading volumes and greater fee generation. Conversely, when market activity slows and fewer participants actively manage yield exposure, trading volumes and protocol revenue tend to decline.
+      </p>
+
+      <h3>Staking Mechanism</h3>
+      <p>
+        PENDLE accrues value through its staking mechanism. Users can stake PENDLE to receive sPENDLE, a token representing their staked position. Stakers become eligible to receive a share of protocol-generated fees and additional incentives distributed across Pendle's liquidity pools. This structure directly links tokenholder rewards to the level of activity occurring within the protocol.
+      </p>
+      <p>
+        As trading volume and fee generation increase, the rewards distributed to stakers grow correspondingly, strengthening the incentive to hold and stake the token. The higher the revenue, the higher the distribution to sPENDLE holders and the larger the incentive to allocate capital to the protocol.
+      </p>
+
+      <h3>Reflexive Dynamics</h3>
+
+      <div class="callout">
+        <p>
+          Higher protocol activity generates higher fees, which increases staking rewards, strengthens demand for the token and reduces circulating supply as more users stake. This pushes token value upward. Conversely, when activity declines, fee generation falls, reducing the economic incentive to hold and stake PENDLE. Notably, PENDLE's full token supply is already unlocked, eliminating future dilution risk and linking token value more directly to protocol usage and fee generation.
+        </p>
+      </div>
+
+      <p>
+        The relationship between PENDLE's token price and broader DeFi conditions is visible when overlaying PENDLE price against total DeFi TVL. Through mid-2025, both rose in tandem; however, from late 2025 onward, PENDLE's price declined more sharply than overall DeFi TVL, suggesting token-specific headwinds — including the vePENDLE to sPENDLE migration uncertainty and broader DeFi yield compression — beyond general market conditions.
+      </p>
+
+      <!-- CHART PLACEHOLDER: PENDLE price vs DeFi TVL -->
+      <div class="chart-placeholder">
+        <span class="chart-icon">📉</span>
+        <span class="chart-title">PENDLE Price vs. Total DeFi TVL (Jan 2025 – Feb 2026)</span>
+        <span>CoinGecko / DefiLlama — weekly closing prices, TVL in USD billions</span>
+      </div>
+
+      <h3>Transition to sPENDLE and Capital Efficiency Improvements</h3>
+      <p>
+        Historically, Pendle used a vote-escrowed token model (vePENDLE), but in January 2026 it transitioned to a liquid staking model through sPENDLE. This structure allows users to stake PENDLE without fixed lock-up periods while still receiving rewards and participating in governance. The change improves capital efficiency and lowers barriers to participation, expanding the pool of long-term tokenholders and strengthening the connection between protocol growth and token demand. Holders of sPENDLE can also deploy those tokens elsewhere in DeFi, adding further utility.
+      </p>
+      <p>
+        Growth in staked supply since January 2025 reflects increasing participation. Cumulative staked PENDLE grew from approximately 60–70 million tokens in early 2025 to over 120 million by February 2026, representing roughly half of PENDLE's circulating supply. This level of staking participation provides a strong supply-side constraint that amplifies the reflexive dynamics described above.
+      </p>
+
+      <!-- CHART PLACEHOLDER: Staked supply growth -->
+      <div class="chart-placeholder">
+        <span class="chart-icon">🔒</span>
+        <span class="chart-title">Cumulative Staked PENDLE Supply (Jan 2025 – Feb 2026)</span>
+        <span>Dune Analytics — monthly snapshots of total staked supply</span>
+      </div>
+
+      <!-- PERFORMANCE -->
+      <span class="section-label">Market Context</span>
+      <h2>Performance Relative to Major Cryptoassets</h2>
+
+      <p>
+        PENDLE has materially outperformed DeFi peers mid-cycle but underperformed late-2025, reflecting its unique sensitivity to yield volatility rather than TVL alone. This distinction matters: unlike protocols whose revenue scales with TVL, Pendle's revenue scales with yield <em>volatility</em> and trading activity. When yields move in either direction, Pendle benefits from the resulting trading activity. When yields are flat and predictable, there is less incentive to trade, and Pendle's value proposition weakens relative to peers.
+      </p>
+      <p>
+        PENDLE has exhibited greater volatility than BTC, ETH, and SOL, reflecting its direct exposure to DeFi yield conditions rather than broader macro flows. While Bitcoin and Ethereum often reflect institutional capital flows into crypto, PENDLE's performance is more closely tied to conditions within yield-generating sectors of DeFi.
+      </p>
+
+      <!-- CHART PLACEHOLDER: PENDLE vs BTC/ETH/SOL -->
+      <div class="chart-placeholder">
+        <span class="chart-icon">📊</span>
+        <span class="chart-title">PENDLE vs. BTC, ETH, SOL — Indexed Price Performance (2025)</span>
+        <span>CoinGecko — indexed to 100 at Jan 1 2025, weekly returns</span>
+      </div>
+
+      <p>
+        Against DeFi peers — Lido (LDO), Curve Finance (CRV), and Ethena (ENA) — PENDLE tracked a similar decline through the period, consistent with sector-wide compression in yield demand. However, its mid-2025 outperformance reflects periods of elevated protocol activity and TVL growth unique to Pendle's yield-trading use case.
+      </p>
+      <p>
+        While these protocols differ in their specific functions, they share a common dependence on DeFi liquidity and yield demand. Pendle's performance relative to these peers illustrates its role as a yield-trading marketplace rather than a yield-generating protocol — a distinction that surfaces clearly in cross-asset performance analysis.
+      </p>
+
+      <!-- CHART PLACEHOLDER: PENDLE vs DeFi peers -->
+      <div class="chart-placeholder">
+        <span class="chart-icon">📈</span>
+        <span class="chart-title">PENDLE vs. LDO, CRV, ENA — Indexed Price Performance (2025)</span>
+        <span>CoinGecko — indexed to 100 at Jan 1 2025, weekly returns</span>
+      </div>
+
+      <!-- CONCLUSION -->
+      <span class="section-label">Conclusion</span>
+      <h2>Conclusion</h2>
+
+      <p>
+        Pendle introduces transferable yield to decentralized finance, enabling users to separate, trade, and manage future yield in a way previously limited to traditional fixed-income markets. By allowing market participants to lock in fixed returns or speculate on yield movements, Pendle expands the range of financial strategies available on-chain and establishes foundational infrastructure for interest rate markets in DeFi.
+      </p>
+      <p>
+        Because protocol revenue and staking incentives are derived directly from trading activity, Pendle's economic performance is closely tied to the level of yield demand and overall DeFi liquidity. The 2025 results — $58 billion in fixed yield settled, $5.7 billion average TVL, and $40 million in annualized revenue — demonstrate significant product-market fit. The expansion into funding rate derivatives via Boros, non-EVM chains, and institutional products signals that Pendle is positioning itself not merely as a DeFi application, but as foundational infrastructure for on-chain fixed income.
+      </p>
+      <p>
+        As yield markets grow in depth and sophistication, the next competitive question is whether Pendle can sustain trading activity — and thus revenue — through yield compression cycles, or whether its value proposition depends on an environment of persistent yield volatility. The answer to that question will define whether Pendle becomes a cycle-specific application or a permanent layer of DeFi's financial stack.
+      </p>
+
+      <!-- Data sources -->
+      <p class="data-sources">
+        Data sources: CoinDesk Data API, Dune Analytics, DefiLlama, CoinGecko. Analysis period: January 2025 – February 2026.
+      </p>
+
+    </div>
+    <!-- /post-body -->
+
+  </div>
+  <!-- /post-wrap -->
+</div>
+<!-- /container -->
+```
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Federico Eckert • Built with HTML/CSS</small>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+
+</body>
+</html>
