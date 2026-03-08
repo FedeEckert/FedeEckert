@@ -250,9 +250,20 @@
         <div class="post-body">
 
           <h2>Introduction</h2>
-          <p>Decentralized finance has introduced a wide range of yield-bearing assets, including liquid staking tokens, restaking assets, and synthetic dollar instruments. While these assets generate yield, that yield is typically variable and realized passively over time, limiting users' ability to actively manage interest rate exposure or access future returns immediately.</p>
-          <p>In traditional finance, interest rates and yield streams are actively traded through fixed-income instruments such as bonds, interest rate swaps, and forwards. These markets allow participants to lock in fixed returns, hedge interest rate risk, or speculate on future rate movements. Until recently, equivalent functionality did not exist in DeFi, where yield remained largely non-transferable and dependent on passive holding. In other words, yield in DeFi was highly illiquid, limiting the range of possible financial operations and the overall growth of the ecosystem.</p>
-          <p>Pendle addresses this limitation by enabling the tokenization and trading of future yield, transforming yield from a passive return into a tradable financial instrument. This enables users to lock in fixed yields, speculate on future yield changes, or access anticipated returns upfront to improve capital efficiency. Pendle introduces interest rate markets into DeFi, allowing yield to be priced, traded, and managed dynamically through market mechanisms.</p>
+          <p>Decentralized finance has introduced a wide range of yield-bearing assets, including liquid staking tokens, 
+            restaking assets, and synthetic dollar instruments. While these assets generate yield, that yield is typically 
+            variable and realized passively over time, limiting users' ability to actively manage interest rate exposure 
+            or access future returns immediately.</p>
+          <p>In traditional finance, interest rates and yield streams are actively traded through fixed-income instruments 
+            such as bonds, interest rate swaps, and forwards. These markets allow participants to lock in fixed returns, 
+            hedge interest rate risk, or speculate on future rate movements. Until recently, equivalent functionality did 
+            not exist in DeFi, where yield remained largely non-transferable and dependent on passive holding. In other 
+            words, yield in DeFi was highly illiquid, limiting the range of possible financial operations and the overall 
+            growth of the ecosystem.</p>
+          <p>Pendle addresses this limitation by enabling the tokenization and trading of future yield, transforming yield 
+            from a passive return into a tradable financial instrument. This enables users to lock in fixed yields,
+            speculate on future yield changes, or access anticipated returns upfront to improve capital efficiency. 
+           </p>
 
           <h2>How It Works: PT and YT</h2>
           <p>Pendle operates by splitting a yield-bearing asset into two separate tokens:</p>
@@ -289,10 +300,17 @@
             </tbody>
           </table>
 
-          <p>This structure enables a range of financial strategies. Users seeking predictable returns may sell their YT and retain PT, effectively converting variable yield into a fixed return. Conversely, users expecting higher future yields may purchase YT to gain leveraged exposure to yield fluctuations. This separation allows market participants to manage yield exposure according to their individual risk preferences, market expectations, or financial needs.</p>
+          <p>This structure enables a range of financial strategies. Users seeking predictable returns may sell their YT 
+            and retain PT, effectively converting variable yield into a fixed return. Conversely, users expecting higher 
+            future yields may purchase YT to gain leveraged exposure to yield fluctuations. This separation allows market 
+            participants to manage yield exposure according to their individual risk preferences, market expectations, or 
+            financial needs.</p>
 
           <h3>The Pendle AMM</h3>
-          <p>Pendle facilitates these trades through a custom automated market maker specifically designed for yield-bearing assets. Unlike traditional AMMs, Pendle's AMM incorporates time to maturity into its pricing mechanism, allowing token prices to converge toward redemption value as maturity approaches. This enables efficient price discovery for future yield and ensures consistent liquidity throughout the asset's lifecycle.</p>
+          <p>Pendle facilitates these trades through a custom automated market maker specifically designed for 
+            yield-bearing assets. Unlike traditional AMMs, Pendle's AMM incorporates time to maturity into its pricing 
+            mechanism, allowing token prices to converge toward redemption value as maturity approaches. This enables 
+            efficient price discovery for future yield and ensures consistent liquidity throughout the asset's lifecycle.</p>
 
           <h2>Adoption and Ecosystem Growth</h2>
           <p>Pendle's growth has closely tracked the expansion of yield-bearing assets across DeFi, particularly with the rise of liquid staking, restaking, and synthetic yield protocols. Since launching V2, Pendle has grown into the largest on-chain yield trading platform by total value locked. The protocol currently operates across ten blockchains — Ethereum, Arbitrum, BSC, Base, Sonic, Berachain, HyperEVM, Plasma, Mantle, and Optimism — and is actively expanding to non-EVM ecosystems including Solana via cross-chain principal tokens. With 552 active markets spanning assets from Lido's stETH to Ethena's sUSDe, Pendle has established itself as core infrastructure for on-chain interest rate exposure.</p>
