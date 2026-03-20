@@ -1,1 +1,596 @@
+<!doctype html>
 
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gold as DeFi's New Collateral Primitive — Federico Eckert</title>
+  <meta name="description" content="How tokenized gold is evolving from a passive store-of-value wrapper into an active collateral layer in DeFi lending markets." />
+  <meta property="og:title" content="Gold as DeFi's New Collateral Primitive" />
+  <meta property="og:description" content="Tokenized gold is becoming the first non-USD, non-crypto-native collateral to gain real traction in DeFi. Here's what that means." />
+  <meta property="og:image" content="../assets/og-image.png" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="../assets/Logo1.png" type="image/png">
+  <link rel="stylesheet" href="../styles.css?v=6" />
+  <style>
+    .post-wrap {
+      padding: 48px 0 96px;
+    }
+
+```
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 40px;
+  transition: border-color .15s, color .15s;
+}
+.back-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Tags */
+.post-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.post-tags span {
+  font-size: 12px;
+  color: var(--muted);
+  background: rgba(2,6,23,0.04);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+
+/* Title block */
+.post-title {
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 14px;
+}
+.post-subtitle {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin: 0 0 24px;
+}
+.post-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 24px 0 18px;
+}
+.post-read-time {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 48px;
+}
+
+/* Body prose */
+.post-body h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 48px 0 10px;
+}
+.post-body h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 32px 0 8px;
+}
+.post-body p {
+  margin: 0 0 18px;
+  color: #1E293B;
+  font-size: 16px;
+  line-height: 1.75;
+}
+.post-body ul, .post-body ol {
+  margin: 0 0 18px;
+  padding-left: 22px;
+  color: #1E293B;
+  font-size: 16px;
+  line-height: 1.75;
+}
+.post-body li { margin-bottom: 8px; }
+.post-body strong { font-weight: 600; }
+.post-body em { font-style: italic; }
+
+/* Callout */
+.callout {
+  background: rgba(14,165,233,0.06);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 28px 0;
+}
+.callout p { margin: 0; font-size: 15px; color: var(--text); }
+
+/* Metrics grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 14px;
+  margin: 24px 0 32px;
+}
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 14px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.metric-card .metric-value {
+  display: block;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 6px;
+  background: linear-gradient(90deg, var(--primary), var(--mint));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.metric-card .metric-label {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.45;
+}
+
+/* Table */
+.post-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0 28px;
+  font-size: 14px;
+}
+.post-table th {
+  background: rgba(14,165,233,0.07);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.post-table td {
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  color: #1E293B;
+  vertical-align: top;
+  line-height: 1.55;
+}
+.post-table tr:nth-child(even) td { background: rgba(2,6,23,0.02); }
+
+/* Chart placeholder */
+.chart-placeholder {
+  background: linear-gradient(135deg, rgba(14,165,233,0.04), rgba(124,58,237,0.04));
+  border: 1px dashed rgba(14,165,233,0.4);
+  border-radius: var(--radius);
+  padding: 36px 20px;
+  margin: 20px 0 28px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.chart-placeholder .chart-icon {
+  display: block;
+  font-size: 26px;
+  margin-bottom: 8px;
+  opacity: 0.45;
+}
+.chart-placeholder .chart-title {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 13px;
+  margin-bottom: 4px;
+  font-family: Inter, sans-serif;
+}
+
+/* Data sources */
+.data-sources {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .post-wrap { padding: 28px 0 64px; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+```
+
+  </style>
+</head>
+<body class="post-page">
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../index.html">
+        <img src="../assets/Logo1.png" alt="" class="logo">
+        <span>Federico Eckert</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Open menu" onclick="toggleNav()">&#9776;</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="post-wrap">
+
+```
+    <a class="back-btn" href="../index.html#research">&#8592; Back to research</a>
+
+    <h1 class="post-title">Gold as DeFi's New Collateral Primitive</h1>
+    <p class="post-subtitle">How tokenized gold is evolving from a passive store-of-value wrapper into an active collateral layer in decentralized lending, and what that means for DeFi's risk architecture.</p>
+
+    <hr class="post-divider">
+    <p class="post-read-time">Estimated read time &middot; 15 min</p>
+
+    <div class="post-body">
+
+      <!-- ============================================ -->
+      <!-- SECTION 1: INTRODUCTION                      -->
+      <!-- ============================================ -->
+      <h2>Introduction: Gold Goes On-Chain</h2>
+
+      <p>Gold has been humanity's store of value for over five thousand years. In 2025, it began a second life.
+        Tokenized gold, digital tokens backed one-to-one by physical bullion held in regulated vaults, grew from
+        a niche crypto experiment into a $6 billion market in under eighteen months. Trading volume reached
+        $178 billion across the year, surpassing the combined turnover of the five largest traditional gold ETFs
+        for the first time. By February 2026, more than 1.2 million ounces of physical gold sat in custody
+        backing on-chain tokens.</p>
+
+      <p>But the real story is not that gold moved onto the blockchain. The real story is what happened next:
+        gold started <em>working</em>. For the first time, an asset class that has historically sat idle in vaults
+        began generating yield, serving as loan collateral, and participating in decentralized financial markets.
+        Tokenized gold is no longer just a passive wrapper around a commodity. It is becoming DeFi's first
+        non-USD, non-crypto-native collateral to gain meaningful traction in lending protocols.</p>
+
+      <p>This post examines how that transition is unfolding, who the key players are, where tokenized gold is
+        being deployed across DeFi, and what it means for the future of on-chain credit.</p>
+
+      <h3>Key Metrics (Feb 2026)</h3>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value">~$6B</span>
+          <span class="metric-label">Total tokenized gold<br>market cap</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">$178B</span>
+          <span class="metric-label">2025 cumulative<br>trading volume</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">1,550%</span>
+          <span class="metric-label">YoY volume growth<br>vs 2024</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">~97%</span>
+          <span class="metric-label">XAUT + PAXG<br>market dominance</span>
+        </div>
+      </div>
+
+      <p>The chart below shows the growth of tokenized gold supply on Ethereum, measured in market capitalization
+        terms. PAXG captures the full circulating supply (Ethereum-only token), while XAUT reflects only the
+        Ethereum-based portion of its multi-chain supply (XAUT also exists on Tron, TON, Polygon, and Solana).</p>
+
+      <div class="chart-placeholder">
+        <figure class="figure">
+          <!-- TODO: Replace with Dune embed URL for market cap chart -->
+          <iframe src="DUNE_EMBED_URL_MARKET_CAP"
+            width="100%"
+            height="400"
+            frameborder="0"
+            style="border-radius: 12px; border: 1px solid var(--line);">
+          </iframe>
+          <figcaption>Tokenized Gold Market Cap on Ethereum: PAXG + XAUT (2020 - 2026). XAUT reflects Ethereum supply only.</figcaption>
+        </figure>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- SECTION 2: HOW IT WORKS                      -->
+      <!-- ============================================ -->
+      <h2>How Tokenized Gold Works: XAUT vs PAXG</h2>
+
+      <p>The tokenized gold market is dominated by two issuers: Tether Gold (XAUT) and Paxos Gold (PAXG).
+        Together they account for roughly 97% of total market share. Both tokens represent one troy ounce of
+        LBMA-certified gold held in professional vaults, but they differ meaningfully in regulatory structure,
+        custodial model, and DeFi integration.</p>
+
+      <table class="post-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>XAUT (Tether Gold)</th>
+            <th>PAXG (Paxos Gold)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Issuer</strong></td>
+            <td>TG Commodities Limited (Tether subsidiary)</td>
+            <td>Paxos Trust Company</td>
+          </tr>
+          <tr>
+            <td><strong>Regulator</strong></td>
+            <td>Quarterly attestations (BDO)</td>
+            <td>NYDFS-regulated; monthly audits (KPMG)</td>
+          </tr>
+          <tr>
+            <td><strong>Custody</strong></td>
+            <td>Swiss vaults (Tether-owned facility)</td>
+            <td>London vaults (Brink's, LBMA-approved)</td>
+          </tr>
+          <tr>
+            <td><strong>Chains</strong></td>
+            <td>Ethereum, Tron, TON, Polygon, Solana (via LayerZero)</td>
+            <td>Ethereum only</td>
+          </tr>
+          <tr>
+            <td><strong>Decimals</strong></td>
+            <td>6 (same as USDT)</td>
+            <td>18 (standard ERC-20)</td>
+          </tr>
+          <tr>
+            <td><strong>Circulating supply</strong></td>
+            <td>~520,000+ tokens (multi-chain)</td>
+            <td>~500,000 tokens</td>
+          </tr>
+          <tr>
+            <td><strong>Market cap</strong></td>
+            <td>~$2.7B</td>
+            <td>~$2.3B</td>
+          </tr>
+          <tr>
+            <td><strong>Redemption</strong></td>
+            <td>Physical delivery in Switzerland (min ~430 tokens)</td>
+            <td>Physical or cash via Paxos (tiered fees)</td>
+          </tr>
+          <tr>
+            <td><strong>DeFi presence</strong></td>
+            <td>Aave V3 (collateral), Morpho Blue, Uniswap, Curve</td>
+            <td>Fluid, Uniswap V2/V3, MakerDAO (governance proposals)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>The key takeaway is that these are not synthetic or derivative products. Each token represents a direct
+        claim on allocated, auditable physical gold. This matters for DeFi because it means the collateral backing
+        these tokens exists outside the crypto ecosystem entirely, introducing a fundamentally different risk
+        profile into on-chain lending markets.</p>
+
+      <!-- ============================================ -->
+      <!-- SECTION 3: DEFI INTEGRATION MAP              -->
+      <!-- ============================================ -->
+      <h2>The DeFi Integration Map</h2>
+
+      <p>Tokenized gold's integration into DeFi has accelerated through 2025 and into 2026. What started
+        as simple DEX liquidity provision has expanded into active collateral usage across major lending
+        protocols. Today, tokenized gold is deployed in three primary ways across decentralized finance:
+        as collateral in lending markets, as liquidity in DEX pools, and as the basis for yield-generating
+        vault strategies.</p>
+
+      <h3>Lending Protocols: Gold as Collateral</h3>
+
+      <p>The clearest signal that tokenized gold is transitioning from passive wrapper to active DeFi primitive
+        is its growing presence in on-chain lending markets. As of March 2026, approximately $100 million in
+        tokenized gold is deployed across three major lending protocols on Ethereum.</p>
+
+      <p><strong>Aave V3</strong> is the dominant venue, holding roughly $85 million in XAUT as isolated
+        collateral. Aave governance has actively expanded XAUT's parameters through 2025-2026, with Chaos Labs
+        proposing increases to its debt ceiling as recently as February 2026. XAUT is also being enabled as
+        collateral on Aave's Mantle deployment, extending gold-backed borrowing to Layer 2.</p>
+
+      <p><strong>Morpho Blue</strong> holds approximately $11 million in XAUT across its permissionless lending
+        markets. Morpho's singleton architecture allows market creators to define custom risk parameters for
+        gold collateral, enabling more tailored lending conditions than Aave's governance-driven approach.</p>
+
+      <p><strong>Fluid</strong> has attracted roughly $9 million in PAXG, making it the primary lending venue
+        for Paxos Gold on Ethereum. Fluid's liquidity layer accepts PAXG as supply-side capital, allowing
+        borrowers to access liquidity against gold-backed positions.</p>
+
+      <div class="chart-placeholder">
+        <figure class="figure">
+          <!-- TODO: Replace with Dune embed URL for lending chart -->
+          <iframe src="DUNE_EMBED_URL_LENDING"
+            width="100%"
+            height="400"
+            frameborder="0"
+            style="border-radius: 12px; border: 1px solid var(--line);">
+          </iframe>
+          <figcaption>Tokenized Gold Deposited in DeFi Lending Protocols (USD value, 2024 - 2026).</figcaption>
+        </figure>
+      </div>
+
+      <div class="callout">
+        <p>An interesting pattern emerges: XAUT dominates lending (Aave, Morpho) while PAXG dominates DEX
+          liquidity (Uniswap). This likely reflects XAUT's broader multi-chain presence and deeper CEX liquidity
+          attracting institutional lending activity, while PAXG's Ethereum-native design and U.S. regulatory
+          clarity make it a natural fit for on-chain market making.</p>
+      </div>
+
+      <h3>Yield Strategies</h3>
+
+      <p>Beyond lending, a new category of yield-generating products is emerging around tokenized gold. Falcon
+        Finance offers an XAUT staking vault where users lock gold-backed tokens for a 180-day period to earn
+        an estimated 3-5% APR paid in USDf, Falcon's synthetic dollar. Theo launched thGOLD, a token
+        representing a slice of a gold lending fund that pays roughly 2.3% annually from real-world gold lending
+        to jewelers. These products are turning gold from an idle asset into a productive one, addressing one of
+        the oldest criticisms of gold as an investment: that it generates no income.</p>
+
+      <h3>DEX Liquidity</h3>
+
+      <p>On-chain trading activity for tokenized gold has surged dramatically. Weekly DEX volume for PAXG and
+        XAUT pairs was negligible through most of 2024 but began climbing sharply in late 2025, with weekly
+        peaks exceeding $400 million by early 2026. This volume is concentrated on Uniswap (both V2 and V3
+        pools), with PAXG/WETH and PAXG/USDC as the most active pairs.</p>
+
+      <div class="chart-placeholder">
+        <figure class="figure">
+          <!-- TODO: Replace with Dune embed URL for DEX volume chart -->
+          <iframe src="DUNE_EMBED_URL_DEX_VOLUME"
+            width="100%"
+            height="400"
+            frameborder="0"
+            style="border-radius: 12px; border: 1px solid var(--line);">
+          </iframe>
+          <figcaption>Weekly DEX Trading Volume for Tokenized Gold: PAXG + XAUT (2024 - 2026).</figcaption>
+        </figure>
+      </div>
+
+      <p>The volume spike coincides with gold's rally above $5,000 per ounce and a broader risk-off rotation
+        in crypto markets. During the January 2026 drawdown, when most digital assets fell double digits, PAXG
+        became a top-10 traded asset on Hyperliquid's derivatives platform, with over $220 million in open
+        interest and 89% of positions skewed bullish. Tokenized gold is not just being held. It is being
+        actively traded.</p>
+
+      <!-- ============================================ -->
+      <!-- SECTION 4: WHY GOLD COLLATERAL IS DIFFERENT  -->
+      <!-- ============================================ -->
+      <h2>Why Gold Collateral Is Different</h2>
+
+      <p>DeFi's existing collateral stack is dominated by three categories: native crypto assets (ETH, wBTC),
+        liquid staking derivatives (stETH, wstETH), and stablecoins (USDC, USDT, DAI). Tokenized gold
+        introduces something fundamentally new: a non-sovereign, non-crypto-native asset with a correlation
+        profile that differs from everything else in the stack.</p>
+
+      <h3>Negative Correlation When It Matters Most</h3>
+
+      <p>Gold tends to appreciate during the exact moments when crypto collateral is most stressed. During
+        the January 2026 geopolitical crisis, involving Greenland sovereignty tensions, Denmark's liquidation
+        of U.S. Treasury holdings, and fiscal instability in Japan, crypto markets sold off sharply while
+        gold-backed tokens rallied. XAUT gained nearly 10% in the first three weeks of January while ETH
+        declined. This inverse behavior during stress events is precisely what makes gold valuable as a
+        diversifying collateral type.</p>
+
+      <!-- TODO: Add PAXG vs ETH indexed price chart here -->
+      <!--
+      <div class="chart-placeholder">
+        <figure class="figure">
+          <img src="Data/Gold_vs_ETH_price.png" alt="PAXG vs ETH Indexed Price Comparison" />
+          <figcaption>PAXG vs. ETH Indexed Price Performance (2025 - 2026).</figcaption>
+        </figure>
+      </div>
+      -->
+
+      <h3>Lower Volatility, Fewer Liquidations</h3>
+
+      <p>Gold's annualized volatility is significantly lower than ETH or BTC. This means that gold-collateralized
+        positions are far less likely to trigger liquidation cascades during market drawdowns. For lending
+        protocols, this translates to more stable collateral that requires fewer emergency interventions and
+        generates less bad debt. It also means that protocols can potentially offer higher loan-to-value ratios
+        on gold than on volatile crypto assets, improving capital efficiency for borrowers.</p>
+
+      <h3>The Counterparty Tradeoff</h3>
+
+      <p>There is an important tension at the heart of tokenized gold as DeFi collateral. Unlike ETH, which
+        exists natively on-chain with no issuer, custodian, or counterparty, tokenized gold requires trust in
+        a centralized entity. You must trust that Tether or Paxos actually holds the gold they claim to hold,
+        that their attestation processes are reliable, and that the tokens remain redeemable under all
+        conditions. This is the fundamental tradeoff: you gain macro diversification and lower volatility, but
+        you lose trustlessness. Whether that tradeoff is worth it depends on the use case, but for protocols
+        seeking to diversify their collateral base beyond crypto-native assets, it represents a meaningful
+        step forward.</p>
+
+      <!-- ============================================ -->
+      <!-- SECTION 5: RISKS AND OPEN QUESTIONS          -->
+      <!-- ============================================ -->
+      <h2>Risks and Open Questions</h2>
+
+      <p>The growth of tokenized gold in DeFi is real, but it is not without significant risks. A balanced
+        assessment should consider the following:</p>
+
+      <h3>Custodial and Issuer Risk</h3>
+      <p>The entire value proposition of tokenized gold rests on the integrity of the issuer's reserves.
+        Tether conducts quarterly attestations through BDO, while Paxos provides monthly audits through KPMG.
+        However, attestations are not full audits, and the history of custodial failures in crypto (FTX, Celsius)
+        should make investors cautious. Paxos paid a $48.5 million settlement to NYDFS in August 2025 for
+        AML deficiencies related to its former Binance partnership, a reminder that even regulated issuers face
+        compliance challenges.</p>
+
+      <h3>De-peg Risk</h3>
+      <p>During periods of extreme volatility, gold tokens can trade at premiums or discounts to spot gold.
+        PAXG traded at a notable premium on Hyperliquid during the January 2026 geopolitical scare, reflecting
+        an on-chain safe-haven demand premium. While this is generally benign, sustained deviations could
+        create problems for lending protocols that rely on accurate price feeds for liquidation calculations.</p>
+
+      <h3>Concentration Risk</h3>
+      <p>Two issuers control roughly 97% of the tokenized gold market. This level of concentration creates
+        single-point-of-failure risk. If either Tether or Paxos were to face a regulatory action, custodial
+        failure, or operational disruption, the impact on the entire tokenized gold ecosystem would be severe.
+        The World Gold Council has announced plans to launch a tokenized gold framework, which could introduce
+        much-needed competition and diversification.</p>
+
+      <h3>Liquidity Depth</h3>
+      <p>At $6 billion in total market cap, tokenized gold is still small compared to traditional gold markets.
+        SPDR Gold Shares (GLD) alone manages over $160 billion. On-chain DEX liquidity, while growing rapidly,
+        remains thin relative to centralized venues. Large positions can still move prices significantly on
+        decentralized exchanges, and a sudden demand for redemptions could test the system's capacity.</p>
+
+      <!-- ============================================ -->
+      <!-- SECTION 6: CONCLUSION                        -->
+      <!-- ============================================ -->
+      <h2>Conclusion</h2>
+
+      <p>Tokenized gold is undergoing a quiet but significant transformation. What began as a simple digital
+        wrapper around a physical commodity is becoming an active financial instrument within decentralized
+        lending markets. With approximately $100 million deployed across Aave, Morpho, and Fluid, gold is now
+        the first non-USD, non-crypto-native collateral to achieve meaningful integration into DeFi's credit
+        infrastructure.</p>
+
+      <p>The implications extend beyond gold itself. If tokenized gold succeeds as DeFi collateral, it
+        establishes a template for other real-world assets (commodities, treasuries, real estate) to enter the
+        on-chain collateral stack. DeFi's collateral base could shift from a crypto-only composition toward a
+        diversified portfolio of real-world and digital assets. That represents a structural evolution in how
+        decentralized credit works, and one that could make the system more resilient to the kind of correlated
+        drawdowns that have historically plagued crypto-native lending.</p>
+
+      <p>The infrastructure is live. The governance proposals are passing. The collateral is flowing. Gold is
+        no longer just sitting in a vault. It is working.</p>
+
+      <div class="data-sources">
+        <p><strong>Data sources:</strong> Dune Analytics (on-chain data), CoinGecko, CoinMarketCap,
+          CEX.io Research, Aave Governance, Morpho documentation. On-chain analysis covers Ethereum only.
+          All USD values use PAXG spot price as gold proxy. Data as of March 2026.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+```
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>&copy; <span id="year"></span> Federico Eckert &bull; Built with HTML/CSS</small>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+
+</body>
+</html>
