@@ -452,3 +452,12 @@ body{
   .cards-arrow.prev{ left: 0; }
   .cards-arrow.next{ right: 0; }
 }
+
+    /* Constrain static chart images */
+    .figure--medium img {
+      max-width: 680px;
+      width: 100%;
+      display: block;
+      margin: 0 auto;
+    }
+
