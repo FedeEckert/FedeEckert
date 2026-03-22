@@ -454,7 +454,7 @@
 
       <div class="chart-placeholder">
         <figure class="figure">
-          <!-- TODO: Replace with Dune embed URL for DEX volume chart -->
+          
           <iframe src="https://dune.com/embeds/6874312/10767562"
             width="100%"
             height="400"
@@ -489,6 +489,14 @@
         gold-backed tokens rallied. XAUT gained nearly 10% in the first three weeks of January while ETH
         declined. This inverse behavior during stress events is precisely what makes gold valuable as a
         diversifying collateral type.</p>
+      
+            <div class="chart-placeholder">
+            <figure class="figure">
+              <img src="Data/Gold_vs_BTC_ETH_Indexed.png" alt="Gold vs BTC vs ETH Indexed Price" />
+              <figcaption>Gold vs. Bitcoin vs. Ethereum: Indexed Price Performance, Jan 2025 - Mar 2026.</figcaption>
+            </figure>
+          </div>
+
 
       <p>The data supports this thesis directly. Over the period from January 2025 to March 2026, gold's daily
           return correlation with Ethereum was just 0.10, and with Bitcoin only 0.18. By contrast, BTC and ETH
@@ -509,27 +517,55 @@
 
 
       <h3>Lower Volatility, Fewer Liquidations</h3>
+      
+        <p>Gold's annualized volatility is significantly lower than ETH or BTC. This means that gold-collateralized
+            positions are far less likely to trigger liquidation cascades during market drawdowns. For lending
+            protocols, this translates to more stable collateral that requires fewer emergency interventions and
+            generates less bad debt.</p>
 
-      <p>Gold's annualized volatility is significantly lower than ETH or BTC. This means that gold-collateralized
-        positions are far less likely to trigger liquidation cascades during market drawdowns. For lending
-        protocols, this translates to more stable collateral that requires fewer emergency interventions and
-        generates less bad debt. It also means that protocols can potentially offer higher loan-to-value ratios
-        on gold than on volatile crypto assets, improving capital efficiency for borrowers.</p>
+          <p>The practical implications for lending markets are substantial. Protocols can offer higher loan-to-value
+            (LTV) ratios on gold than on volatile crypto assets. A typical ETH LTV on Aave sits around 80-82%,
+            reflecting the risk of rapid price drawdowns. Gold, with its lower volatility profile and historically
+            shallower drawdowns, could justify LTVs closer to 85-90% over time as on-chain pricing infrastructure
+            matures and protocol risk teams gain confidence in the asset. Higher LTVs mean borrowers can extract
+            more capital per dollar of collateral deposited, directly improving capital efficiency.</p>
+
+          <p>This has a compounding effect on lending market growth. More capital-efficient collateral attracts
+            larger depositors, particularly institutional participants who are already familiar with gold as a
+            treasury asset. Deeper collateral pools enable more competitive borrowing rates, which in turn attract
+            more borrowers. The result is a positive feedback loop: better collateral parameters lead to deeper
+            liquidity, which leads to better rates, which leads to more adoption. This is the same flywheel that
+            drove stETH to become Aave's largest collateral type, and gold has the potential to follow a similar
+            trajectory for a different class of user.</p>
+
+          <p>There is also a structural resilience argument. DeFi lending today is heavily exposed to correlated
+            drawdowns. When ETH falls sharply, most of the collateral stack falls with it (wBTC, stETH, and even
+            stablecoin demand can shift). Gold-backed collateral introduces a layer that is unlikely to be
+            liquidated during these events precisely because it tends to hold value or appreciate when crypto
+            sells off. For protocols, this means a portion of their collateral base remains stable during the
+            exact moments when stability matters most, reducing systemic risk across the entire lending pool.</p>
+
 
       <h3>The Counterparty Tradeoff</h3>
 
-      <p>There is an important tension at the heart of tokenized gold as DeFi collateral. Unlike ETH, which
-        exists natively on-chain with no issuer, custodian, or counterparty, tokenized gold requires trust in
-        a centralized entity. You must trust that Tether or Paxos actually holds the gold they claim to hold,
-        that their attestation processes are reliable, and that the tokens remain redeemable under all
-        conditions. This is the fundamental tradeoff: you gain macro diversification and lower volatility, but
-        you lose trustlessness. Whether that tradeoff is worth it depends on the use case, but for protocols
-        seeking to diversify their collateral base beyond crypto-native assets, it represents a meaningful
-        step forward.</p>
+          <p>There is an important tension at the heart of tokenized gold as DeFi collateral. Unlike ETH, which
+            exists natively on-chain with no issuer, custodian, or counterparty, tokenized gold requires trust in
+            a centralized entity. You must trust that Tether or Paxos actually holds the gold they claim to hold,
+            that their attestation processes are reliable, and that the tokens remain redeemable under all
+            conditions. This is the fundamental tradeoff: you gain macro diversification and lower volatility, but
+            you lose trustlessness.</p>
 
-      <!-- ============================================ -->
-      <!-- SECTION 5: RISKS AND OPEN QUESTIONS          -->
-      <!-- ============================================ -->
+          <p>However, this tradeoff is not new to DeFi. It is one the ecosystem has already accepted repeatedly.
+            USDC, the most widely used stablecoin in lending protocols, depends entirely on Circle's reserves and
+            regulatory standing. When Circle disclosed exposure to Silicon Valley Bank in March 2023, USDC
+            de-pegged to $0.87 and billions in DeFi collateral was suddenly at risk. Similarly, stETH, which
+            became Aave's single largest collateral type, concentrates Ethereum staking through Lido, a single
+            liquid staking provider. DeFi has consistently chosen to accept centralized counterparty risk when
+            the utility justifies it. Tokenized gold follows the same pattern: the diversification benefit and
+            the access to an uncorrelated, real-world asset class may well justify the custodial dependency, just
+            as it has for stablecoins and liquid staking tokens before it.</p>
+
+      
       <h2>Risks and Open Questions</h2>
 
       <p>The growth of tokenized gold in DeFi is real, but it is not without significant risks. A balanced
